@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio Cube</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="hud">
+    <div class="hud__left">
+      <div class="hud__title">Портфолио</div>
+      <div class="hud__hint">Scroll/Swipe — смена стороны</div>
+    </div>
+
+    <!-- Порядок сторон: 3,5,4,6,1,2 -->
+    <nav class="hud__nav" aria-label="Навигация">
+      <button class="tab is-active" type="button" data-face="top">3</button>
+      <button class="tab" type="button" data-face="front">5</button>
+      <button class="tab" type="button" data-face="bottom">4</button>
+      <button class="tab" type="button" data-face="back">6</button>
+      <button class="tab" type="button" data-face="right">1</button>
+      <button class="tab" type="button" data-face="left">2</button>
+    </nav>
+  </header>
+
+  <main class="stage" id="stage">
+    <div class="cube-wrap">
+      <div class="cube" id="cube">
+
+        <section class="face face--front">
+          <div class="card">
+            <h2>5</h2>
+            <p>Front</p>
+            <ul>
+              <li>Главный экран</li>
+              <li>Питч</li>
+              <li>Ключевые навыки</li>
+            </ul>
+            <button class="btn" id="demoBtn" type="button">Кнопка</button>
+          </div>
+        </section>
+
+        <section class="face face--back">
+          <div class="card card--violet">
+            <h2>6</h2>
+            <p>Back</p>
+            <ul>
+              <li>Ссылки</li>
+              <li>Заметки</li>
+              <li>Доп. инфо</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="face face--right">
+          <div class="card card--red">
+            <h2>1</h2>
+            <p>Right</p>
+            <ul>
+              <li>Проекты</li>
+              <li>Демо</li>
+              <li>Кейсы</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="face face--left">
+          <div class="card card--amber">
+            <h2>2</h2>
+            <p>Left</p>
+            <ul>
+              <li>Стек</li>
+              <li>Инструменты</li>
+              <li>Технологии</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="face face--top">
+          <div class="card card--green">
+            <h2>3</h2>
+            <p>Top</p>
+            <ul>
+              <li>Обо мне</li>
+              <li>Фокус</li>
+              <li>Чем занимаюсь</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="face face--bottom">
+          <div class="card card--cyan">
+            <h2>4</h2>
+            <p>Bottom</p>
+            <ul>
+              <li>Контакты</li>
+              <li>GitHub</li>
+              <li>Email</li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

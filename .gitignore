@@ -1,0 +1,34 @@
+# --- Node dependencies (ignore everywhere) ---
+node_modules/  # ignore node_modules in any subfolder [web:45]
+
+# --- Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*  # common Node log patterns [web:46]
+
+# --- Runtime / temp ---
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+
+# --- Environment / secrets ---
+.env
+.env.*.local  # ignore local env variants [web:46]
+
+# --- OS / editor junk ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# --- Optional: generated optimized assets ---
+# If optimize.js generates рядом files like "image.png.webp", ignore them:
+*.png.webp
+*.jpg.webp
+*.jpeg.webp  # generated files обычно не коммитят [web:53]
+
+# If later you generate a separate output dir (recommended), ignore it:
+# /frontend/.generated-images/

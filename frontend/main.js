@@ -1,120 +1,65 @@
-const stage = document.getElementById("stage");
 const cube = document.getElementById("cube");
-const demoBtn = document.getElementById("demoBtn");
+const stage = document.getElementById("stage");
+const tabs = Array.from(document.querySelectorAll(".tab"));
 
-demoBtn.addEventListener("click", () => alert("Кнопка нажалась"));
+const FACE_ROT = {
+  front:  { x: 0,   y: 0   },
+  back:   { x: 0,   y: 180 },
+  right:  { x: 0,   y: -90 },
+  left:   { x: 0,   y: 90  },
+  top:    { x: -90, y: 0   },
+  bottom: { x: 90,  y: 0   },
+};
 
-/* vh fix для мобилок (адресная строка меняет видимый viewport) */
-function setVhVar() {
-  const h = (window.visualViewport?.height ?? window.innerHeight);
-  document.documentElement.style.setProperty("--vh", `${h * 0.01}px`);
+const ORDER = ["top","front","bottom","back","right","left"];
+let index = 0;
+
+function setActive(face){
+  const rot = FACE_ROT[face];
+  cube.style.transform = `translate(-50%, -50%) rotateX(${rot.x}deg) rotateY(${rot.y}deg)`;
+  tabs.forEach(btn => btn.classList.toggle("is-active", btn.dataset.face === face));
+  index = Math.max(0, ORDER.indexOf(face));
 }
 
-setVhVar();
-window.addEventListener("resize", setVhVar);
-window.visualViewport?.addEventListener("resize", setVhVar);
-window.visualViewport?.addEventListener("scroll", setVhVar);
+tabs.forEach(btn => {
+  btn.addEventListener("click", () => setActive(btn.dataset.face));
+});
 
-const faces = [
-  { x: -90, y: 0 },  // top
-  { x: 0,   y: 0 },  // front
-  { x: 90,  y: 0 },  // bottom
-  { x: 0,   y: 180 },// back
-  { x: 0,   y: -90 },// right
-  { x: 0,   y: 90 }, // left
-];
-
-const faceNameByIndex = ["top", "front", "bottom", "back", "right", "left"];
-const faceIndexByName = { top: 0, front: 1, bottom: 2, back: 3, right: 4, left: 5 };
-
-let i = 0;
-
-function setActiveTab(name) {
-  document.querySelectorAll(".tab").forEach((b) => {
-    b.classList.toggle("is-active", b.dataset.face === name);
-  });
+function step(dir){
+  index = (index + dir + ORDER.length) % ORDER.length;
+  setActive(ORDER[index]);
 }
 
-function apply() {
-  const f = faces[i];
-  cube.style.transform = `rotateX(${f.x}deg) rotateY(${f.y}deg)`;
-  setActiveTab(faceNameByIndex[i]);
-}
-
-function step(dir) {
-  i = (i + dir + faces.length) % faces.length;
-  apply();
-}
-
-apply();
-
-/* top nav -> direct jump */
-const nav = document.querySelector(".hud__nav");
-if (nav) {
-  nav.addEventListener("click", (e) => {
-    const btn = e.target.closest(".tab");
-    if (!btn) return;
-    const name = btn.dataset.face;
-    if (!(name in faceIndexByName)) return;
-
-    i = faceIndexByName[name];
-    apply();
-  });
-}
-
-/* wheel desktop */
-let acc = 0;
-let lock = false;
-
+/* wheel: чтобы preventDefault реально работал, listener должен быть passive:false [web:192][web:108] */
 window.addEventListener("wheel", (e) => {
-  if (lock) return;
-  acc += e.deltaY;
-  const thr = 120;
-  if (Math.abs(acc) >= thr) {
-    step(acc > 0 ? 1 : -1);
-    acc = 0;
-    lock = true;
-    setTimeout(() => (lock = false), 250);
-  }
-}, { passive: true });
-
-/* swipe mobile: preventDefault() только если это реально свайп, иначе не ломаем клики */
-let t0x = 0;
-let t0y = 0;
-let startedOnInteractive = false;
-let moved = false;
-
-function isInteractiveTarget(target) {
-  return !!target.closest?.("button, a, input, textarea, select, label");
-}
-
-stage.addEventListener("touchstart", (e) => {
-  const t = e.changedTouches[0];
-  t0x = t.clientX;
-  t0y = t.clientY;
-  moved = false;
-  startedOnInteractive = isInteractiveTarget(e.target);
-}, { passive: true });
-
-stage.addEventListener("touchmove", (e) => {
-  if (startedOnInteractive) return;
-
-  const t = e.changedTouches[0];
-  const dx = t.clientX - t0x;
-  const dy = t.clientY - t0y;
-
-  if (Math.abs(dx) + Math.abs(dy) > 6) moved = true;
-  if (moved) e.preventDefault();
+  e.preventDefault();
+  step(e.deltaY > 0 ? 1 : -1);
 }, { passive: false });
 
-stage.addEventListener("touchend", (e) => {
-  if (startedOnInteractive) return;
+/* swipe (pointer events) */
+let startX = 0, startY = 0, tracking = false;
 
-  const t = e.changedTouches[0];
-  const dx = t.clientX - t0x;
-  const dy = t.clientY - t0y;
+stage.addEventListener("pointerdown", (e) => {
+  tracking = true;
+  startX = e.clientX;
+  startY = e.clientY;
+});
 
-  if (Math.abs(dy) > 40 && Math.abs(dy) > Math.abs(dx) * 1.2) {
-    step(dy < 0 ? 1 : -1);
+stage.addEventListener("pointerup", (e) => {
+  if (!tracking) return;
+  tracking = false;
+
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+
+  if (Math.abs(dx) < 30 && Math.abs(dy) < 30) return;
+
+  if (Math.abs(dy) > Math.abs(dx)){
+    step(dy > 0 ? -1 : 1);
+  } else {
+    step(dx > 0 ? -1 : 1);
   }
-}, { passive: true });
+});
+
+/* Важно: ставим начальное состояние ОДИН раз и больше не трогаем translate */
+setActive("top");

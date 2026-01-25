@@ -16,8 +16,8 @@
 
     <!-- Порядок сторон: 3,5,4,6,1,2 -->
     <nav class="hud__nav" aria-label="Навигация">
-      <button class="tab is-active" type="button" data-face="top">3</button>
-      <button class="tab" type="button" data-face="front">5</button>
+      <button class="tab is-active" type="button" data-face="top">About me</button>
+      <button class="tab" type="button" data-face="front">Node.js skills</button>
       <button class="tab" type="button" data-face="bottom">4</button>
       <button class="tab" type="button" data-face="back">6</button>
       <button class="tab" type="button" data-face="right">1</button>
@@ -31,14 +31,27 @@
 
         <section class="face face--front">
           <div class="card">
-            <h2>5</h2>
-            <p>Front</p>
-            <ul>
-              <li>Главный экран</li>
-              <li>Питч</li>
-              <li>Ключевые навыки</li>
-            </ul>
-            <button class="btn" id="demoBtn" type="button">Кнопка</button>
+            <div class="card__photoWrap card__photoWrap--corner">
+              <img class="photo" src="nodejs-icon.svg" alt="Node.js Logo"/>
+            </div>
+            <div class="card__content">
+              <p>
+                I can develop <span class="hl hl--mark">backend applications</span> in
+                <span class="hl hl--grad">Node.js</span>, work with
+                <span class="hl hl--u">asynchronous code</span> and
+                <span class="hl hl--u">event loops</span>, create
+                <span class="hl hl--mark">REST APIs</span> in
+                <span class="hl hl--grad">Express</span>, connect and use
+                <span class="hl hl--mark">databases</span>, implement
+                <span class="hl hl--u">authentication</span> and
+                <span class="hl hl--u">basic security</span>, write
+                <span class="hl hl--mark">tests</span>, set up
+                <span class="hl hl--mark">logging</span> and
+                <span class="hl hl--mark">debugging</span>, optimize
+                <span class="hl hl--u">performance</span>, and deploy services using
+                <span class="hl hl--grad">Docker</span>.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -79,14 +92,17 @@
         </section>
 
         <section class="face face--top">
-          <div class="card card--green">
-            <h2>3</h2>
-            <p>Top</p>
-            <ul>
-              <li>Обо мне</li>
-              <li>Фокус</li>
-              <li>Чем занимаюсь</li>
-            </ul>
+          <div class="card card--green card--with-photo">
+            <div class="card__photoWrap card__photoWrap--corner">
+              <img class="photo" src="test_portfolio_photo.webp" alt="">
+            </div>
+            <div class="card__content">
+              <h2>About me</h2>
+              <p>
+                My name is Ivan Zimalev, I'm a backend developer and a graduate of the Software Engineering program at Caine College.
+                I'm interested in AI and write backend applications in Node.js.
+              </p>
+            </div>
           </div>
         </section>
 

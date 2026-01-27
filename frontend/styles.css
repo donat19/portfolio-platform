@@ -6,7 +6,6 @@
   --muted: #94a3b8;
 
   --stroke: rgba(148,163,184,0.22);
-  --card: rgba(15,23,42,0.78);
 
   --accent:  #22d3ee;
   --accent2: #60a5fa;
@@ -14,9 +13,9 @@
   --focus: rgba(34,211,238,0.35);
 
   /* Cuboid sizing */
-  --w: min(86vw, 720px); /* X */
-  --h: min(46vw, 360px); /* Y */
-  --d: min(54vw, 520px); /* Z */
+  --w: min(86vw, 720px);
+  --h: min(46vw, 360px);
+  --d: min(54vw, 520px);
 }
 
 *{ box-sizing: border-box; }
@@ -40,7 +39,7 @@ body{
 /* ===== HUD ===== */
 .hud{
   padding: 12px;
-  background: linear-gradient(to bottom, var(--card), rgba(15,23,42,0.35));
+  background: linear-gradient(to bottom, rgba(15,23,42,0.78), rgba(15,23,42,0.35));
   border-bottom: 1px solid var(--stroke);
   backdrop-filter: blur(8px);
 
@@ -59,7 +58,6 @@ body{
 .hud__title{ font-weight: 700; }
 .hud__hint{ color: var(--muted); font-size: 12px; }
 
-/* ===== NAV ===== */
 .hud__nav{
   display: flex;
   gap: 8px;
@@ -144,14 +142,14 @@ body{
   .stage{ touch-action: none; }
 }
 
-/* WRAP must fit all faces */
+/* Wrap fits all faces */
 .cube-wrap{
   width: max(var(--w), var(--d));
   height: max(var(--h), var(--d));
   position: relative;
 }
 
-/* ===== CUBOID ===== */
+/* ===== Cube ===== */
 .cube{
   width: var(--w);
   height: var(--h);
@@ -177,7 +175,15 @@ body{
   transform-style: preserve-3d;
 }
 
-/* FRONT/BACK */
+/* ===== Unique color per face via CSS vars ===== */
+.face--front  { --card-tint:  34 211 238; } /* cyan */
+.face--back   { --card-tint: 168  85 247; } /* violet */
+.face--right  { --card-tint: 239  68  68; } /* red */
+.face--left   { --card-tint: 245 158  11; } /* amber */
+.face--top    { --card-tint:  34 197  94; } /* green */
+.face--bottom { --card-tint:  96 165 250; } /* blue */
+
+/* FRONT/BACK => w×h */
 .face--front{
   width: var(--w);
   height: var(--h);
@@ -190,7 +196,7 @@ body{
   transform: translate(-50%, -50%) rotateY(180deg) translateZ(calc(var(--d) / 2));
 }
 
-/* RIGHT/LEFT */
+/* RIGHT/LEFT => d×h */
 .face--right{
   width: var(--d);
   height: var(--h);
@@ -203,7 +209,7 @@ body{
   transform: translate(-50%, -50%) rotateY(-90deg) translateZ(calc(var(--w) / 2));
 }
 
-/* TOP/BOTTOM */
+/* TOP/BOTTOM => w×d */
 .face--top{
   width: var(--w);
   height: var(--d);
@@ -216,14 +222,25 @@ body{
   transform: translate(-50%, -50%) rotateX(-90deg) translateZ(calc(var(--h) / 2));
 }
 
-/* ===== CARDS ===== */
+/* ===== Cards ===== */
 .card{
   width: 100%;
   height: 100%;
   border-radius: 28px;
-
   border: 1px solid var(--stroke);
-  background: rgba(15, 23, 42, 0.82);
+
+  /* Multiple backgrounds layered (gradient + base color). [web:368] */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(var(--card-tint, 148 163 184), 0.24),
+      rgba(var(--card-tint, 148 163 184), 0.10)
+    ),
+    rgba(15, 23, 42, 0.82);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(var(--card-tint, 148 163 184), 0.12) inset;
 
   padding: clamp(14px, 3vw, 28px);
   backdrop-filter: blur(6px);
@@ -240,14 +257,7 @@ body{
   opacity: .92;
 }
 
-/* colored sides */
-.card--red    { background: rgba(239,68,68,0.18); }
-.card--amber  { background: rgba(245,158,11,0.18); }
-.card--green  { background: rgba(34,197,94,0.18); }
-.card--cyan   { background: rgba(34,211,238,0.14); }
-.card--violet { background: rgba(168,85,247,0.18); }
-
-/* default photo wrapper */
+/* ===== Photo ===== */
 .card__photoWrap--corner{
   width: 190px;
   height: 190px;
@@ -264,7 +274,7 @@ body{
   object-fit: contain;
 }
 
-/* ===== TOP FACE layout ===== */
+/* ===== TOP layout ===== */
 .face--top .card--with-photo{
   display: grid;
   grid-template-columns: 40% 60%;
@@ -286,7 +296,6 @@ body{
   object-fit: cover;
 }
 
-/* content is flex-column so p can fill remaining height */
 .face--top .card--with-photo .card__content{
   height: 80%;
   min-width: 0;
@@ -303,16 +312,17 @@ body{
 }
 
 .face--top .card--with-photo .card__content p{
-  flex: 1 1 auto;     /* [web:296] */
+  margin: 0;
+  line-height: 1.28;
+  flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 
-  line-height: 1.35;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
-/* ===== FRONT FACE layout (skills) ===== */
+/* ===== FRONT layout ===== */
 .face--front .card{
   display: flex;
   align-items: flex-start;
@@ -329,7 +339,6 @@ body{
   background: #ffffff1a;
 }
 
-/* important: content has fixed height (100%) so p can fill it */
 .face--front .card__content{
   flex: 1 1 auto;
   min-width: 0;
@@ -341,15 +350,17 @@ body{
 }
 
 .face--front .card__content p{
-  flex: 1 1 auto;     /* [web:296] */
+  margin: 0;
+  line-height: 1.22;
+  flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 
-  line-height: 1.35;
   overflow-wrap: anywhere;
   word-break: break-word;
 }
 
+/* ===== Mobile ===== */
 @media (max-width: 520px){
   .face--front .card{
     flex-direction: column;
@@ -392,7 +403,7 @@ body{
   }
 }
 
-/* ===== HIGHLIGHTS ===== */
+/* ===== Highlights ===== */
 .hl{
   position: relative;
   display: inline;

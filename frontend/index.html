@@ -5,6 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portfolio Cube</title>
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Минимальные стили для футера (можно перенести в styles.css) -->
+  <style>
+    body { grid-template-rows: auto 1fr auto; } /* header, main, footer */
+    .footer {
+      padding: 10px 12px;
+      border-top: 1px solid var(--stroke);
+      background: linear-gradient(to top, rgba(15,23,42,0.78), rgba(15,23,42,0.35));
+      backdrop-filter: blur(8px);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .footer a {
+      color: rgba(255,255,255,0.92);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.22);
+    }
+    .footer a:hover { border-bottom-color: rgba(34,211,238,0.75); }
+    .footer__right { opacity: 0.9; }
+  </style>
 </head>
 
 <body>
@@ -14,14 +39,14 @@
       <div class="hud__hint">Scroll/Swipe — смена стороны</div>
     </div>
 
-    <!-- Порядок сторон: 3,5,4,6,1,2 -->
+    <!-- Порядок вращения НЕ трогаем: top → front → bottom → back → right → left -->
     <nav class="hud__nav" aria-label="Навигация">
       <button class="tab is-active" type="button" data-face="top">About me</button>
       <button class="tab" type="button" data-face="front">Node.js skills</button>
-      <button class="tab" type="button" data-face="bottom">4</button>
-      <button class="tab" type="button" data-face="back">6</button>
-      <button class="tab" type="button" data-face="right">1</button>
-      <button class="tab" type="button" data-face="left">2</button>
+      <button class="tab" type="button" data-face="bottom">Python skills</button>
+      <button class="tab" type="button" data-face="back">Stack</button>
+      <button class="tab" type="button" data-face="right">Projects</button>
+      <button class="tab" type="button" data-face="left">Contacts</button>
     </nav>
   </header>
 
@@ -29,12 +54,34 @@
     <div class="cube-wrap">
       <div class="cube" id="cube">
 
-        <!-- FRONT -->
+        <!-- TOP: About me -->
+        <section class="face face--top">
+          <div class="card card--with-photo">
+            <div class="card__photoWrap card__photoWrap--corner">
+              <img class="photo" src="test_portfolio_photo.webp" alt="Фото" />
+            </div>
+
+            <div class="card__content">
+              <h2>About <span class="hl hl--grad">me</span></h2>
+              <p>
+                My name is <span class="hl hl--mark">Ivan Zimalev</span>, I'm a
+                <span class="hl hl--u">backend developer</span> and a graduate of the
+                <span class="hl hl--mark">Software Engineering</span> program at
+                <span class="hl hl--mark">Caine College</span>. I'm interested in
+                <span class="hl hl--grad">AI</span> and build backend services with
+                <span class="hl hl--grad">Node.js</span> and <span class="hl hl--grad">Python</span>.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- FRONT: Node.js skills -->
         <section class="face face--front">
           <div class="card">
             <div class="card__photoWrap card__photoWrap--corner">
-              <img class="photo" src="nodejs-icon.svg" alt="Node.js Logo"/>
+              <img class="photo" src="nodejs-icon.svg" alt="Node.js Logo" />
             </div>
+
             <div class="card__content">
               <p>
                 I can develop <span class="hl hl--mark">backend applications</span> in
@@ -56,75 +103,86 @@
           </div>
         </section>
 
-        <!-- BACK -->
-        <section class="face face--back">
-          <div class="card card--violet">
-            <h2>6</h2>
-            <p>Back</p>
-            <ul>
-              <li>Ссылки</li>
-              <li>Заметки</li>
-              <li>Доп. инфо</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- RIGHT -->
-        <section class="face face--right">
-          <div class="card card--red">
-            <h2>1</h2>
-            <p>Right</p>
-            <ul>
-              <li>Проекты</li>
-              <li>Демо</li>
-              <li>Кейсы</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- LEFT -->
-        <section class="face face--left">
-          <div class="card card--amber">
-            <h2>2</h2>
-            <p>Left</p>
-            <ul>
-              <li>Стек</li>
-              <li>Инструменты</li>
-              <li>Технологии</li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- TOP -->
-        <section class="face face--top">
-          <div class="card card--green card--with-photo">
+        <!-- BOTTOM: Python skills -->
+        <section class="face face--bottom">
+          <div class="card">
             <div class="card__photoWrap card__photoWrap--corner">
-              <img class="photo" src="test_portfolio_photo.webp" alt="">
+              <img class="photo" src="python-icon.svg" alt="Python Logo" />
             </div>
 
             <div class="card__content">
-              <h2>About <span class="hl hl--grad">me</span></h2>
               <p>
-                My name is <span class="hl hl--mark">Ivan Zimalev</span>, I'm a
-                <span class="hl hl--u">backend developer</span> and a graduate of the
-                <span class="hl hl--mark">Software Engineering</span> program at
-                <span class="hl hl--mark">Caine College</span>.
-                I'm interested in <span class="hl hl--grad">AI</span> and write backend applications in
-                <span class="hl hl--grad">Node.js</span>.
+                I can develop <span class="hl hl--mark">backend applications</span> in
+                <span class="hl hl--grad">Python</span>, write clean and maintainable
+                <span class="hl hl--u">code</span>, build <span class="hl hl--mark">REST APIs</span>
+                (for example with <span class="hl hl--grad">FastAPI</span> or
+                <span class="hl hl--grad">Django/DRF</span>), work with
+                <span class="hl hl--u">asynchronous programming</span> (async/await) and
+                <span class="hl hl--u">background tasks</span>, connect and work with
+                <span class="hl hl--mark">databases</span> using <span class="hl hl--u">ORMs</span>,
+                implement <span class="hl hl--u">authentication</span> and
+                <span class="hl hl--u">basic security</span>, write
+                <span class="hl hl--mark">tests</span> with
+                <span class="hl hl--grad">pytest</span>, set up
+                <span class="hl hl--mark">logging</span> and
+                <span class="hl hl--mark">debugging</span>, optimize
+                <span class="hl hl--u">performance</span> (profiling/caching), and deploy
+                services using <span class="hl hl--grad">Docker</span>.
               </p>
             </div>
           </div>
         </section>
 
-        <!-- BOTTOM -->
-        <section class="face face--bottom">
-          <div class="card card--cyan">
-            <h2>4</h2>
-            <p>Bottom</p>
+        <!-- BACK: Stack -->
+        <section class="face face--back">
+          <div class="card">
+            <h2>Stack</h2>
+            <p>
+              I use <span class="hl hl--grad">JavaScript/TypeScript</span> and
+              <span class="hl hl--grad">Python</span>, and I’m comfortable with
+              <span class="hl hl--u">Linux</span>-based workflows and
+              <span class="hl hl--u">DevOps</span> practices.
+            </p>
             <ul>
-              <li>Контакты</li>
-              <li>GitHub</li>
-              <li>Email</li>
+              <li>Backend: Node.js, Express, Python, FastAPI, Django</li>
+              <li>DB: PostgreSQL, MySQL, SQLite (Redis basics)</li>
+              <li>DevOps: Docker, CI/CD basics</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- RIGHT: Projects -->
+        <section class="face face--right">
+          <div class="card">
+            <h2>Projects</h2>
+            <p>
+              I build <span class="hl hl--mark">production-ready services</span>, internal tools, and
+              <span class="hl hl--mark">APIs</span>. I focus on
+              <span class="hl hl--u">clean architecture</span>,
+              <span class="hl hl--u">performance</span>, and
+              <span class="hl hl--u">reliability</span>.
+            </p>
+            <ul>
+              <li>Portfolio Cube: interactive UI with 3D transforms</li>
+              <li>Backend services: REST APIs, auth, DB integrations</li>
+              <li>Automation: scripts, parsers, CI-friendly tooling</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- LEFT: Contacts -->
+        <section class="face face--left">
+          <div class="card">
+            <h2>Contacts</h2>
+            <p>
+              You can reach me via <span class="hl hl--mark">email</span> or check my work on
+              <span class="hl hl--mark">GitHub</span> and <span class="hl hl--mark">LinkedIn</span>.
+              If you want, I can share <span class="hl hl--u">CV</span>.
+            </p>
+            <ul>
+              <li>Email: your.email@example.com</li>
+              <li>GitHub: github.com/your-username</li>
+              <li>LinkedIn: linkedin.com/in/your-profile</li>
             </ul>
           </div>
         </section>
@@ -133,6 +191,21 @@
     </div>
   </main>
 
+  <footer class="footer" role="contentinfo">
+    <div class="footer__left">
+      © <span id="year"></span> Ivan Zimalev. All rights reserved.
+    </div>
+
+    <div class="footer__right">
+      Some icons/images are provided by
+      <a href="https://icons8.com/" target="_blank" rel="noopener noreferrer">Icons8</a>.
+    </div>
+  </footer>
+
+  <script>
+    // Автогод для футера
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
   <script src="main.js"></script>
 </body>
 </html>

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PromptCanvas — Генерация</title>
+  <link rel="stylesheet" href="project-two.css" />
+</head>
+
+<body>
+  <div class="app">
+    <!-- Left sidebar -->
+    <aside class="sidebar" aria-label="Панель настроек">
+      <a class="brand" href="#">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span class="brand__name">PromptCanvas</span>
+      </a>
+
+      <div class="panel">
+        <div class="field">
+          <div class="field__label">Model</div>
+          <label class="select">
+            <span class="select__label">Model selection</span>
+            <select aria-label="Model selection">
+              <option selected>Model selection</option>
+              <option>Flux</option>
+              <option>SDXL</option>
+              <option>Playground</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="field">
+          <div class="field__label">Style</div>
+
+          <label class="select">
+            <span class="select__label">Aspect Ratio</span>
+            <select aria-label="Aspect ratio preset">
+              <option selected>Aspect Ratio</option>
+              <option>1:1</option>
+              <option>4:3</option>
+              <option>16:9</option>
+              <option>9:16</option>
+            </select>
+          </label>
+
+          <label class="select select--ghost">
+            <span class="select__label">Aspect Ratio</span>
+            <select aria-label="Aspect ratio">
+              <option selected>Aspect Ratio</option>
+              <option>1024×1024</option>
+              <option>1152×896</option>
+              <option>1344×768</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="field">
+          <div class="field__row">
+            <div class="field__label">Quality</div>
+            <div class="pill">HD</div>
+          </div>
+          <input class="range" type="range" min="0" max="100" value="65" aria-label="Quality" />
+        </div>
+
+        <div class="field">
+          <div class="field__label">Seed</div>
+          <input class="input" type="text" inputmode="numeric" placeholder="" aria-label="Seed" />
+        </div>
+
+        <div class="field">
+          <div class="field__label">Negative prompt</div>
+          <textarea class="textarea" rows="10" placeholder="Txstmeiït" aria-label="Negative prompt"></textarea>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Top nav -->
+      <header class="topbar">
+        <nav class="nav" aria-label="Навигация">
+          <a class="nav__link" href="#">Галерея</a>
+          <a class="nav__link" href="#">Модели</a>
+          <a class="nav__link" href="#">Тарифы</a>
+          <a class="nav__link" href="#">API</a>
+        </nav>
+
+        <div class="actions">
+          <a class="btn btn--ghost" href="#">Войти</a>
+          <a class="btn btn--primary" href="#">Создать</a>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div class="hero__copy">
+          <h1 class="h1">Генерируйте<br/>изображения из текста<br/>за секунды</h1>
+          <p class="lead">
+            Style control, quality, провкораженасй протошниння
+            privasчyия cдодипрнение!вира bigолвое privacy.
+          </p>
+
+          <div class="prompt">
+            <div class="prompt__box" role="group" aria-label="Prompt input">
+              <div class="prompt__prefix">Prompt:</div>
+              <textarea class="prompt__input" rows="4" aria-label="Prompt">
+теепнчостсть иоди нс то рицрет,
+иепея, ско родста зобрадчугатнянния ндонения,
+инпомвыеоооюто псетрнов
+              </textarea>
+            </div>
+
+            <button class="btn btn--gen" type="button">Сгенерировать</button>
+          </div>
+        </div>
+
+        <div class="hero__cards" aria-label="Примеры">
+          <div class="preview preview--big" aria-hidden="true"></div>
+          <div class="preview preview--small" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="results" aria-label="Результаты">
+        <input class="timeline" type="range" min="0" max="100" value="55" aria-label="Progress" />
+
+        <div class="thumbs">
+          <article class="thumb">
+            <div class="thumb__img thumb__img--arch" aria-hidden="true"></div>
+            <div class="thumb__cap">Result</div>
+          </article>
+
+          <article class="thumb">
+            <div class="thumb__img thumb__img--portrait" aria-hidden="true"></div>
+            <div class="thumb__cap">Result</div>
+          </article>
+
+          <article class="thumb">
+            <div class="thumb__img thumb__img--land" aria-hidden="true"></div>
+            <div class="thumb__cap">Figner</div>
+          </article>
+
+          <article class="thumb">
+            <div class="thumb__img thumb__img--face" aria-hidden="true"></div>
+            <div class="thumb__cap">Cack form</div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right history -->
+    <aside class="history" aria-label="История">
+      <div class="history__head">
+        <div class="history__title">History</div>
+        <button class="iconbtn" type="button" aria-label="Collapse">
+          <span aria-hidden="true">▾</span>
+        </button>
+      </div>
+
+      <div class="history__list" role="list">
+        <div class="hitem" role="listitem">
+          <div class="hitem__avatar"></div>
+          <div class="hitem__meta">
+            <div class="hitem__name">Recent generations</div>
+            <div class="hitem__time">12-мрs 12:00.85</div>
+          </div>
+          <button class="iconbtn" type="button" aria-label="More">⋯</button>
+        </div>
+
+        <div class="hitem" role="listitem">
+          <div class="hitem__avatar hitem__avatar--alt"></div>
+          <div class="hitem__meta">
+            <div class="hitem__name">Fрotek</div>
+            <div class="hitem__time">12-μрs 12:00.25</div>
+          </div>
+          <button class="iconbtn" type="button" aria-label="More">⋯</button>
+        </div>
+
+        <div class="hitem" role="listitem">
+          <div class="hitem__avatar"></div>
+          <div class="hitem__meta">
+            <div class="hitem__name">Recent generations</div>
+            <div class="hitem__time">12-Іμрs 12:00.55</div>
+          </div>
+          <button class="iconbtn" type="button" aria-label="More">⋯</button>
+        </div>
+
+        <div class="hitem" role="listitem">
+          <div class="hitem__avatar hitem__avatar--grad"></div>
+          <div class="hitem__meta">
+            <div class="hitem__name">4orgaink</div>
+            <div class="hitem__time">12-Іμрs 12:00.53</div>
+          </div>
+          <button class="iconbtn" type="button" aria-label="More">⋯</button>
+        </div>
+
+        <div class="hitem" role="listitem">
+          <div class="hitem__avatar hitem__avatar--man"></div>
+          <div class="hitem__meta">
+            <div class="hitem__name">G-Hppк</div>
+            <div class="hitem__time">12-Іμрs 12:00.53</div>
+          </div>
+          <button class="iconbtn" type="button" aria-label="More">⋯</button>
+        </div>
+
+        <div class="hitem" role="listitem">
+          <div class="hitem__avatar"></div>
+          <div class="hitem__meta">
+            <div class="hitem__name">High-Sσah</div>
+            <div class="hitem__time">12-Іμрs 12:00.66</div>
+          </div>
+          <button class="iconbtn" type="button" aria-label="More">⋯</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

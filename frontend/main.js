@@ -3,7 +3,6 @@ const stage = document.getElementById("stage");
 const tabs = Array.from(document.querySelectorAll(".tab"));
 
 /* ===== cube faces ===== */
-
 const FACE_ROT = {
   front: { x: 0, y: 0 },
   back: { x: 0, y: 180 },
@@ -17,41 +16,52 @@ const ORDER = ["top", "front", "bottom", "back", "right", "left"];
 let index = 0;
 
 /* ===== right projects ===== */
-
 const projectsWrap = document.getElementById("right-projects");
 let projectsCreated = false;
 
 function createProjectCubes() {
   if (!projectsWrap) return;
   if (projectsCreated) return;
-
   projectsCreated = true;
 
   const projects = [
-    { title: "Project One", corner: "from-tl" },
-    { title: "Project Two", corner: "from-tr" },
-    { title: "Project Three", corner: "from-bl" },
-    { title: "Project Four", corner: "from-br" },
+    { title: "Project One", corner: "from-tl", url: "/projects/project-one.html" },
+    { title: "Project Two", corner: "from-tr", url: "/projects/project-two.html" },
+    { title: "Project Three", corner: "from-bl", url: "/projects/project-three.html" },
+    { title: "Project Four", corner: "from-br", url: "/projects/project-four.html" },
   ];
 
   projects.forEach((p) => {
     const el = document.createElement("div");
     el.className = `project-cube ${p.corner}`;
     el.textContent = p.title;
+
+    el.setAttribute("role", "link");
+    el.setAttribute("tabindex", "0");
+
+    el.addEventListener("click", () => {
+      window.location.href = p.url;
+    });
+
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") window.location.href = p.url;
+    });
+
     projectsWrap.appendChild(el);
   });
 }
 
 function showProjects() {
   if (!projectsWrap) return;
-
   createProjectCubes();
-  projectsWrap.classList.remove("is-faded");
 
-  // Принудительный reflow для применения начальных стилей
+  // FIX: гарантируем, что слой с проектами поверх куба и принимает клики
+  projectsWrap.style.pointerEvents = "auto";
+  projectsWrap.style.zIndex = "9999";
+
+  projectsWrap.classList.remove("is-faded");
   projectsWrap.offsetHeight;
 
-  // Двойной requestAnimationFrame для гарантии
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       projectsWrap.classList.add("is-visible");
@@ -61,24 +71,24 @@ function showProjects() {
 
 function fadeProjects() {
   if (!projectsWrap) return;
+
   projectsWrap.classList.remove("is-visible");
   projectsWrap.classList.add("is-faded");
+
+  // чтобы скрытый слой не перехватывал события
+  projectsWrap.style.pointerEvents = "none";
 }
 
 /* ===== left qrs (Contacts) ===== */
-
 const qrsWrap = document.getElementById("left-qrs");
 let qrsCreated = false;
 
 function createQrs() {
   if (!qrsWrap) return;
   if (qrsCreated) return;
-
   qrsCreated = true;
 
-  const links = Array.from(
-    document.querySelectorAll(".face--left .contact-card")
-  );
+  const links = Array.from(document.querySelectorAll(".face--left .contact-card"));
   const corners = ["from-tl", "from-tr", "from-bl", "from-br"];
 
   links.slice(0, 4).forEach((a, idx) => {
@@ -86,8 +96,7 @@ function createQrs() {
     const data = href.length ? href : window.location.href;
 
     const label = (
-      a.querySelector(".contact-card__label")?.textContent ||
-      `Link ${idx + 1}`
+      a.querySelector(".contact-card__label")?.textContent || `Link ${idx + 1}`
     ).trim();
 
     const el = document.createElement("div");
@@ -105,15 +114,14 @@ function createQrs() {
     el.appendChild(cap);
     qrsWrap.appendChild(el);
 
-    // Дождаться layout, чтобы canvas.clientWidth был корректный (фиксит разный размер)
     requestAnimationFrame(() => drawQrToCanvas(canvas, data));
   });
 }
 
 function showQrs() {
   if (!qrsWrap) return;
-
   createQrs();
+
   qrsWrap.classList.remove("is-faded");
   qrsWrap.offsetHeight;
 
@@ -131,7 +139,6 @@ function fadeQrs() {
 }
 
 /* ===== QR generator (no libs, byte mode, versions 1..4, EC L, mask 0) ===== */
-
 function utf8Bytes(str) {
   return new TextEncoder().encode(str);
 }
@@ -157,13 +164,11 @@ function makeBitBuffer() {
   };
 }
 
-// Versions 1..4, EC level L (single block)
 const QR_TOTAL_CW = [0, 26, 44, 70, 100];
 const QR_EC_CW_L = [0, 7, 10, 15, 20];
 const QR_DATA_CW_L = QR_TOTAL_CW.map((t, i) => (t ? t - QR_EC_CW_L[i] : 0));
 
 function pickVersionForBytes(n) {
-  // byte-mode capacities for level L
   const caps = [0, 17, 32, 53, 78];
   for (let v = 1; v <= 4; v++) if (n <= caps[v]) return v;
   return 4;
@@ -172,30 +177,26 @@ function pickVersionForBytes(n) {
 function buildCodewords(text) {
   const data = utf8Bytes(text);
   const version = pickVersionForBytes(data.length);
-
   const bb = makeBitBuffer();
-  bb.push(0b0100, 4); // byte mode
-  bb.push(data.length, 8); // char count (versions 1..9)
 
+  bb.push(0b0100, 4);
+  bb.push(data.length, 8);
   for (const b of data) bb.push(b, 8);
 
-  bb.push(0, 4); // terminator
+  bb.push(0, 4);
   while (bb.length % 8 !== 0) bb.push(0, 1);
 
   let bytes = bb.toBytes();
   const dataCw = QR_DATA_CW_L[version];
-
   const pads = [0xec, 0x11];
   let padIdx = 0;
+
   while (bytes.length < dataCw) bytes.push(pads[padIdx++ & 1]);
 
   const ecLen = QR_EC_CW_L[version];
   const ec = rsCompute(bytes, ecLen);
-
   return { version, codewords: bytes.concat(ec) };
 }
-
-/* ----- Reed–Solomon over GF(256) ----- */
 
 const GF_EXP = new Uint8Array(512);
 const GF_LOG = new Uint8Array(256);
@@ -242,8 +243,6 @@ function rsCompute(dataBytes, ecLen) {
   return res;
 }
 
-/* ----- Matrix building ----- */
-
 function makeMatrix(size) {
   const m = Array.from({ length: size }, () => Array(size).fill(null));
   const reserved = Array.from({ length: size }, () => Array(size).fill(false));
@@ -257,7 +256,6 @@ function setModule(ctx, r, c, val, isReserved = true) {
 
 function placeFinder(ctx, r0, c0) {
   const size = ctx.m.length;
-
   for (let r = -1; r <= 7; r++) {
     for (let c = -1; c <= 7; c++) {
       const rr = r0 + r;
@@ -270,12 +268,7 @@ function placeFinder(ctx, r0, c0) {
 
       if (onBorder) setModule(ctx, rr, cc, false);
       else if (inOuter) {
-        setModule(
-          ctx,
-          rr,
-          cc,
-          r === 0 || r === 6 || c === 0 || c === 6 || inInner
-        );
+        setModule(ctx, rr, cc, r === 0 || r === 6 || c === 0 || c === 6 || inInner);
       }
     }
   }
@@ -299,16 +292,13 @@ function placePatterns(ctx, version) {
   placeFinder(ctx, 0, size - 7);
   placeFinder(ctx, size - 7, 0);
 
-  // Timing patterns
   for (let i = 8; i < size - 8; i++) {
     setModule(ctx, 6, i, i % 2 === 0);
     setModule(ctx, i, 6, i % 2 === 0);
   }
 
-  // Dark module
   setModule(ctx, 4 * version + 9, 8, true);
 
-  // Alignment patterns
   const alignPos = { 1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26] }[version];
   if (alignPos && alignPos.length) {
     for (const r of alignPos) {
@@ -322,7 +312,6 @@ function placePatterns(ctx, version) {
     }
   }
 
-  // Reserve format info areas
   for (let i = 0; i < 9; i++) {
     if (i !== 6) {
       ctx.reserved[8][i] = true;
@@ -333,6 +322,7 @@ function placePatterns(ctx, version) {
     ctx.reserved[8][i] = true;
     ctx.reserved[i][8] = true;
   }
+
   ctx.reserved[8][8] = true;
   ctx.reserved[7][8] = true;
   ctx.reserved[8][7] = true;
@@ -351,19 +341,15 @@ function placeData(ctx, codewords) {
 
   for (let c = size - 1; c >= 1; c -= 2) {
     if (c === 6) c--;
-
     for (let rStep = 0; rStep < size; rStep++) {
       const r = dirUp ? size - 1 - rStep : rStep;
-
       for (let k = 0; k < 2; k++) {
         const cc = c - k;
         if (ctx.reserved[r][cc]) continue;
-
         const bit = bits[bitIdx++] || 0;
         ctx.m[r][cc] = !!bit;
       }
     }
-
     dirUp = !dirUp;
   }
 }
@@ -382,60 +368,31 @@ function formatBits(ecLevelBits, mask) {
   let data = ((ecLevelBits & 0b11) << 3) | (mask & 0b111);
   let rem = data << 10;
   const gen = 0x537;
-
   for (let i = 14; i >= 10; i--) {
     if (((rem >>> i) & 1) !== 0) rem ^= gen << (i - 10);
   }
-
   return (((data << 10) | (rem & 0x3ff)) ^ 0x5412) & 0x7fff;
 }
 
 function placeFormat(ctx, mask) {
   const size = ctx.m.length;
-  const fmt = formatBits(0b01, mask); // EC level L
+  const fmt = formatBits(0b01, mask);
 
   const coords1 = [
-    [8, 0],
-    [8, 1],
-    [8, 2],
-    [8, 3],
-    [8, 4],
-    [8, 5],
-    [8, 7],
-    [8, 8],
-    [7, 8],
-    [5, 8],
-    [4, 8],
-    [3, 8],
-    [2, 8],
-    [1, 8],
-    [0, 8],
+    [8, 0],[8, 1],[8, 2],[8, 3],[8, 4],[8, 5],[8, 7],[8, 8],
+    [7, 8],[5, 8],[4, 8],[3, 8],[2, 8],[1, 8],[0, 8],
   ];
 
   const coords2 = [
-    [size - 1, 8],
-    [size - 2, 8],
-    [size - 3, 8],
-    [size - 4, 8],
-    [size - 5, 8],
-    [size - 6, 8],
-    [size - 7, 8],
-    [8, size - 8],
-    [8, size - 7],
-    [8, size - 6],
-    [8, size - 5],
-    [8, size - 4],
-    [8, size - 3],
-    [8, size - 2],
-    [8, size - 1],
+    [size - 1, 8],[size - 2, 8],[size - 3, 8],[size - 4, 8],[size - 5, 8],
+    [size - 6, 8],[size - 7, 8],[8, size - 8],[8, size - 7],[8, size - 6],
+    [8, size - 5],[8, size - 4],[8, size - 3],[8, size - 2],[8, size - 1],
   ];
 
   for (let i = 0; i < 15; i++) {
     const bit = ((fmt >>> (14 - i)) & 1) === 1;
-
     const [r1, c1] = coords1[i];
     const [r2, c2] = coords2[i];
-
     setModule(ctx, r1, c1, bit);
     setModule(ctx, r2, c2, bit);
   }
@@ -448,7 +405,6 @@ function makeQrMatrix(text) {
 
   placePatterns(ctx, version);
   placeData(ctx, codewords);
-
   applyMask0(ctx);
   placeFormat(ctx, 0);
 
@@ -464,11 +420,9 @@ function makeQrMatrix(text) {
 function drawQrToCanvas(canvas, text) {
   const matrix = makeQrMatrix(text);
   const size = matrix.length;
-
   const border = 3;
-  const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
 
-  // Фиксируем ВИДИМЫЙ размер по CSS (например 132px), поэтому QR всегда одинаковый.
+  const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
   const target = Math.max(64, Math.floor(canvas.clientWidth || 132));
 
   canvas.width = target * dpr;
@@ -497,10 +451,8 @@ function drawQrToCanvas(canvas, text) {
 }
 
 /* ===== state ===== */
-
 function setActive(face) {
   const rot = FACE_ROT[face];
-
   cube.style.transform = `translate(-50%, -50%) rotateX(${rot.x}deg) rotateY(${rot.y}deg)`;
 
   tabs.forEach((btn) =>
@@ -522,25 +474,24 @@ tabs.forEach((btn) =>
 );
 
 /* ===== navigation ===== */
-
 function step(dir) {
   index = (index + dir + ORDER.length) % ORDER.length;
   setActive(ORDER[index]);
 }
 
 /* ===== wheel (desktop) ===== */
-
 let wheelLock = false;
 
 stage.addEventListener(
   "wheel",
   (e) => {
-    e.preventDefault();
+    // FIX: wheel не должен ломать клики по проектам/ссылкам
+    if (e.target.closest(".project-cube, .contact-card, a, button")) return;
 
+    e.preventDefault();
     if (wheelLock) return;
 
     step(e.deltaY > 0 ? 1 : -1);
-
     wheelLock = true;
     setTimeout(() => (wheelLock = false), 250);
   },
@@ -548,7 +499,6 @@ stage.addEventListener(
 );
 
 /* ===== swipe (touch only) ===== */
-
 const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
 
 if (isTouchDevice) {
@@ -558,17 +508,14 @@ if (isTouchDevice) {
 
   stage.addEventListener("pointerdown", (e) => {
     if (e.pointerType !== "touch") return;
-
     tracking = true;
     stage.setPointerCapture(e.pointerId);
-
     startX = e.clientX;
     startY = e.clientY;
   });
 
   stage.addEventListener("pointerup", (e) => {
     if (!tracking) return;
-
     tracking = false;
     stage.releasePointerCapture(e.pointerId);
 
@@ -583,7 +530,6 @@ if (isTouchDevice) {
 }
 
 /* ===== keep QR crisp on resize ===== */
-
 window.addEventListener("resize", () => {
   document.querySelectorAll(".qr-fly__canvas").forEach((c) => {
     const t = c.dataset.qrText;
@@ -592,5 +538,4 @@ window.addEventListener("resize", () => {
 });
 
 /* ===== init ===== */
-
 setActive("top");

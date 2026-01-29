@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThreadForge — Production-Ready JSON Database для Node.js</title>
+<link rel="stylesheet" href="project-three.css">
+</head>
+<body>
+
+<div class="frame">
+<div class="window">
+<div class="window__inner">
+
+<!-- Topbar -->
+<div class="topbar">
+<div class="topbar__left">
+<div class="brand__name">ThreadForge</div>
+<div class="search">
+<span class="search__icon">🔍</span>
+<input type="text" class="search__input" placeholder="Поиск по документации...">
+</div>
+</div>
+<div class="topbar__right">
+<button class="icon-btn" title="Настройки">⚙️</button>
+<button class="icon-btn" title="Уведомления">🔔</button>
+<button class="btn-primary">📥 Скачать</button>
+<div class="user__avatar"></div>
+</div>
+</div>
+
+<!-- Layout -->
+<div class="layout">
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+<nav class="nav">
+<a class="nav__item is-active" onclick="showSection('overview')">
+<span class="nav__dot"></span>
+<span>Обзор</span>
+</a>
+<a class="nav__item" onclick="showSection('features')">
+<span class="nav__dot"></span>
+<span>Возможности</span>
+</a>
+<a class="nav__item" onclick="showSection('architecture')">
+<span class="nav__dot"></span>
+<span>Архитектура</span>
+</a>
+<a class="nav__item" onclick="showSection('performance')">
+<span class="nav__dot"></span>
+<span>Производительность</span>
+</a>
+<a class="nav__item" onclick="showSection('threading')">
+<span class="nav__dot"></span>
+<span>Multi-Threading</span>
+</a>
+<a class="nav__item" onclick="showSection('enterprise')">
+<span class="nav__dot"></span>
+<span>Enterprise</span>
+</a>
+<a class="nav__item" onclick="showSection('download')">
+<span class="nav__dot"></span>
+<span>Скачать</span>
+</a>
+</nav>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+
+<!-- Overview Section -->
+<div id="overview" class="content-section">
+<div class="content__head">
+<h1 class="h1">Production-Ready JSON Database</h1>
+<p class="sub">
+Встраиваемая JSON-based база данных с ACID транзакциями, WAL и B-Tree индексами
+</p>
+</div>
+
+<div class="grid">
+<!-- Main content: 2x2 cards -->
+<div class="cards">
+<div class="card">
+<h3 class="card__title">⚡ ACID Транзакции</h3>
+<p class="card__desc">
+Полная гарантия атомарности, консистентности, изоляции и долговечности как в PostgreSQL
+</p>
+<div class="tags">
+<span class="tag">Atomicity</span>
+<span class="tag">Consistency</span>
+<span class="tag">Isolation</span>
+<span class="tag">Durability</span>
+</div>
+<div class="card__meta">Критично для production</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📝 Write-Ahead Log</h3>
+<p class="card__desc">
+Автоматическое восстановление после сбоев через WAL журналирование
+</p>
+<div class="tags">
+<span class="tag">Auto Recovery</span>
+<span class="tag">Crash-Safe</span>
+</div>
+<div class="card__meta">Как в PostgreSQL</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">🌳 B-Tree Индексы</h3>
+<p class="card__desc">
+Быстрый поиск O(log n) вместо O(n) с поддержкой range queries
+</p>
+<div class="tags">
+<span class="tag">Fast Search</span>
+<span class="tag">Range Queries</span>
+</div>
+<div class="card__meta">1-2ms на запрос</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">💾 In-Memory Кэш</h3>
+<p class="card__desc">
+LRU кэш обеспечивает 26x ускорение для часто используемых данных
+</p>
+<div class="tags">
+<span class="tag">LRU</span>
+<span class="tag">26x faster</span>
+</div>
+<div class="card__meta">0.3ms cache hit</div>
+</div>
+</div>
+
+<!-- Right panel with insights -->
+<div class="panel">
+<div class="panel__head">
+<span class="panel__title">⚡ Производительность</span>
+<span>📊</span>
+</div>
+
+<div class="insight">
+<div class="spark">
+<div class="spark__fill"></div>
+<div class="spark__line"></div>
+</div>
+<div class="spark__label">Insert 10k документов: 650ms</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Ключевые метрики</div>
+<div class="block__list">
+<div class="bullet">⚡ 15,384 операций/сек</div>
+<div class="bullet">💾 Cache hit 0.3ms</div>
+<div class="bullet">🔍 Index search 1-2ms</div>
+<div class="bullet">📝 WAL overhead &lt;5%</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Сравнение</div>
+<div class="rank">
+<div class="rank__item">✓ ThreadForge: 650ms</div>
+<div class="rank__item">✗ LowDB: 2000ms</div>
+<div class="rank__item">✗ NeDB: 1200ms</div>
+<div class="rank__item">✗ node-ThreadForge: 1500ms</div>
+</div>
+<div class="scrollbar">
+<div class="scrollbar__thumb"></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Quick start section -->
+<div class="last">
+<h2 class="last__title">🚀 Быстрый старт</h2>
+<div class="last__card">
+<div class="preview">
+<div class="preview__img"></div>
+</div>
+<div class="last__actions">
+<button class="btn-ghost">📖 Документация</button>
+<button class="btn-primary">📥 Скачать v1.0.0</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Features Section -->
+<div id="features" class="content-section" style="display:none;">
+<div class="content__head">
+<h1 class="h1">Возможности</h1>
+<p class="sub">MongoDB-like API, ACID транзакции и B-Tree индексы</p>
+</div>
+
+<div class="grid">
+<div class="cards">
+<div class="card">
+<h3 class="card__title">🔍 MongoDB-like Query API</h3>
+<p class="card__desc">
+Знакомый синтаксис с полной поддержкой операторов $gte, $lte, $or, $regex
+</p>
+<div class="tags">
+<span class="tag">$gte / $lte</span>
+<span class="tag">$or / $and</span>
+<span class="tag">$regex</span>
+</div>
+<div class="card__meta">Как в MongoDB</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">💰 Транзакции (ACID)</h3>
+<p class="card__desc">
+Атомарные операции с гарантией commit/rollback для банковских переводов
+</p>
+<div class="tags">
+<span class="tag">begin()</span>
+<span class="tag">commit()</span>
+<span class="tag">rollback()</span>
+</div>
+<div class="card__meta">Production-ready</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📊 Индексы (B-Tree)</h3>
+<p class="card__desc">
+Уникальные и обычные индексы для мгновенного поиска по полям
+</p>
+<div class="tags">
+<span class="tag">Unique</span>
+<span class="tag">Non-unique</span>
+</div>
+<div class="card__meta">createIndex(field, unique)</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📦 Zero Dependencies</h3>
+<p class="card__desc">
+Нет native зависимостей, работает везде где есть Node.js
+</p>
+<div class="tags">
+<span class="tag">Pure JS</span>
+<span class="tag">Cross-platform</span>
+</div>
+<div class="card__meta">Легкая интеграция</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel__head">
+<span class="panel__title">📚 API Примеры</span>
+<span>💡</span>
+</div>
+
+<div class="panel__block">
+<div class="block__title">CRUD операции</div>
+<div class="block__list">
+<div class="bullet">insertOne({ ... })</div>
+<div class="bullet">findOne({ name: 'Ivan' })</div>
+<div class="bullet">updateOne({ _id }, { $set })</div>
+<div class="bullet">deleteOne({ _id })</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Операторы</div>
+<div class="block__list">
+<div class="bullet">$gte, $lte, $gt, $lt</div>
+<div class="bullet">$or, $and, $not</div>
+<div class="bullet">$regex, $in, $nin</div>
+<div class="bullet">$set, $inc, $push</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Опции</div>
+<div class="block__list">
+<div class="bullet">sort, skip, limit</div>
+<div class="bullet">projection</div>
+<div class="bullet">upsert</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Architecture Section -->
+<div id="architecture" class="content-section" style="display:none;">
+<div class="content__head">
+<h1 class="h1">Архитектура</h1>
+<p class="sub">7 слоев: от API Gateway до Distributed Storage</p>
+</div>
+
+<div class="grid">
+<div class="cards">
+<div class="card">
+<h3 class="card__title">1️⃣ API Gateway</h3>
+<p class="card__desc">
+Load Balancing, Request Router, Authentication
+</p>
+<div class="tags">
+<span class="tag">HTTP API</span>
+<span class="tag">WebSocket</span>
+<span class="tag">gRPC</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">2️⃣ Координация</h3>
+<p class="card__desc">
+Consensus протокол, Sharding Manager, Replication
+</p>
+<div class="tags">
+<span class="tag">Raft</span>
+<span class="tag">Sharding</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">3️⃣ Worker Pool</h3>
+<p class="card__desc">
+Worker Threads с SharedArrayBuffer для параллельной обработки
+</p>
+<div class="tags">
+<span class="tag">Query Workers</span>
+<span class="tag">Write Workers</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">4️⃣ MVCC Engine</h3>
+<p class="card__desc">
+Multi-Version Concurrency Control для lock-free чтения
+</p>
+<div class="tags">
+<span class="tag">Collections</span>
+<span class="tag">Transactions</span>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel__head">
+<span class="panel__title">🏗️ Слои 5-7</span>
+<span>📐</span>
+</div>
+
+<div class="panel__block">
+<div class="block__title">5. Индексы & Кэш</div>
+<div class="block__list">
+<div class="bullet">B-Tree индексы</div>
+<div class="bullet">Full-Text Search</div>
+<div class="bullet">Shared LRU Cache</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">6. Надежность</div>
+<div class="block__list">
+<div class="bullet">WAL журналирование</div>
+<div class="bullet">RBAC & Audit Log</div>
+<div class="bullet">Encryption at Rest</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">7. Хранилище</div>
+<div class="block__list">
+<div class="bullet">Shard 1 (Primary + Replicas)</div>
+<div class="bullet">Shard 2 (Primary + Replicas)</div>
+<div class="bullet">Shard N (Primary + Replicas)</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Performance Section -->
+<div id="performance" class="content-section" style="display:none;">
+<div class="content__head">
+<h1 class="h1">Производительность</h1>
+<p class="sub">Бенчмарки и сравнение с аналогами</p>
+</div>
+
+<div class="grid">
+<div class="cards">
+<div class="card">
+<h3 class="card__title">⚡ Insert 10k</h3>
+<p class="card__desc">Вставка 10,000 документов</p>
+<div class="tags">
+<span class="tag">650ms</span>
+<span class="tag">15,384 ops/sec</span>
+</div>
+<div class="card__meta">3x быстрее LowDB</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">🔍 Index Search</h3>
+<p class="card__desc">Поиск по B-Tree индексу</p>
+<div class="tags">
+<span class="tag">1-2ms</span>
+<span class="tag">O(log n)</span>
+</div>
+<div class="card__meta">vs O(n) без индекса</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">💾 Cache Hit</h3>
+<p class="card__desc">LRU кэш для горячих данных</p>
+<div class="tags">
+<span class="tag">0.3ms</span>
+<span class="tag">26x faster</span>
+</div>
+<div class="card__meta">vs 8ms disk read</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📊 Сравнение</h3>
+<p class="card__desc">Insert 10k документов</p>
+<div class="tags">
+<span class="tag">ThreadForge: 650ms ✓</span>
+<span class="tag">NeDB: 1200ms</span>
+<span class="tag">LowDB: 2000ms</span>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel__head">
+<span class="panel__title">📈 Статистика</span>
+<span>📊</span>
+</div>
+
+<div class="insight">
+<div class="spark">
+<div class="spark__fill"></div>
+<div class="spark__line"></div>
+</div>
+<div class="spark__label">Throughput: 15,384 ops/sec</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Детали производительности</div>
+<div class="block__list">
+<div class="bullet">WAL overhead: &lt;5%</div>
+<div class="bullet">Index build: 120ms</div>
+<div class="bullet">Transaction: 2-3ms</div>
+<div class="bullet">Compression: 40% space</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Threading Section -->
+<div id="threading" class="content-section" style="display:none;">
+<div class="content__head">
+<h1 class="h1">Multi-Threading</h1>
+<p class="sub">Worker Threads с SharedArrayBuffer для параллельной обработки</p>
+</div>
+
+<div class="grid">
+<div class="cards">
+<div class="card">
+<h3 class="card__title">🔍 Query Workers</h3>
+<p class="card__desc">
+Выполнение SELECT запросов с lock-free чтением через MVCC
+</p>
+<div class="tags">
+<span class="tag">CPU_CORES * 2</span>
+<span class="tag">MVCC</span>
+</div>
+<div class="card__meta">Параллельное чтение</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">✍️ Write Workers</h3>
+<p class="card__desc">
+INSERT/UPDATE/DELETE с синхронизацией через Atomics
+</p>
+<div class="tags">
+<span class="tag">CPU_CORES</span>
+<span class="tag">Atomics</span>
+</div>
+<div class="card__meta">Координация записи</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📊 Index Workers</h3>
+<p class="card__desc">
+Асинхронное построение и обновление B-Tree индексов
+</p>
+<div class="tags">
+<span class="tag">1-2 threads</span>
+<span class="tag">Background</span>
+</div>
+<div class="card__meta">Не блокирует запросы</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📈 Aggregation Workers</h3>
+<p class="card__desc">
+Параллельная обработка aggregation через Map-Reduce
+</p>
+<div class="tags">
+<span class="tag">CPU_CORES</span>
+<span class="tag">Map-Reduce</span>
+</div>
+<div class="card__meta">Тяжелые запросы</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel__head">
+<span class="panel__title">🔀 MVCC</span>
+<span>🔓</span>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Version Chain</div>
+<div class="block__list">
+<div class="bullet">V1 (TS: 1000)</div>
+<div class="bullet">V2 (TS: 2000)</div>
+<div class="bullet">V3 (TS: 3000)</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Преимущества</div>
+<div class="block__list">
+<div class="bullet">✓ Lock-free reads</div>
+<div class="bullet">✓ Consistent snapshot</div>
+<div class="bullet">✓ Высокая параллельность</div>
+<div class="bullet">✓ Isolation levels</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Enterprise Section -->
+<div id="enterprise" class="content-section" style="display:none;">
+<div class="content__head">
+<h1 class="h1">Enterprise</h1>
+<p class="sub">Репликация, Sharding, Full-Text Search, RBAC, Encryption</p>
+</div>
+
+<div class="grid">
+<div class="cards">
+<div class="card">
+<h3 class="card__title">🔄 Репликация (Raft)</h3>
+<p class="card__desc">
+Consensus-based репликация с автоматическим failover
+</p>
+<div class="tags">
+<span class="tag">Primary-Secondary</span>
+<span class="tag">Auto Failover</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">🗂️ Sharding</h3>
+<p class="card__desc">
+Горизонтальное масштабирование через consistent hashing
+</p>
+<div class="tags">
+<span class="tag">Hash-based</span>
+<span class="tag">Range-based</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">🔍 Full-Text Search</h3>
+<p class="card__desc">
+Inverted Index с TF-IDF и BM25 ранжированием
+</p>
+<div class="tags">
+<span class="tag">TF-IDF</span>
+<span class="tag">BM25</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📊 Aggregation Pipeline</h3>
+<p class="card__desc">
+MongoDB-style агрегации с параллельной обработкой
+</p>
+<div class="tags">
+<span class="tag">Map-Reduce</span>
+<span class="tag">Parallel</span>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel__head">
+<span class="panel__title">🔐 Безопасность</span>
+<span>🛡️</span>
+</div>
+
+<div class="panel__block">
+<div class="block__title">RBAC</div>
+<div class="block__list">
+<div class="bullet">Role-Based Access</div>
+<div class="bullet">Row-level security</div>
+<div class="bullet">Query rewriting</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Audit & Encryption</div>
+<div class="block__list">
+<div class="bullet">Async audit logging</div>
+<div class="bullet">AES-256-GCM</div>
+<div class="bullet">Key rotation</div>
+<div class="bullet">KMS/Vault integration</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Download Section -->
+<div id="download" class="content-section" style="display:none;">
+<div class="content__head">
+<h1 class="h1">Скачать ThreadForge</h1>
+<p class="sub">Получите полный исходный код, документацию и примеры</p>
+</div>
+
+<div class="grid">
+<div class="cards">
+<div class="card">
+<h3 class="card__title">💻 Исходный код</h3>
+<p class="card__desc">
+1,812 строк TypeScript кода с полной реализацией
+</p>
+<div class="tags">
+<span class="tag">TypeScript</span>
+<span class="tag">ES Modules</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">📖 Документация</h3>
+<p class="card__desc">
+2,182 строки подробной документации и API reference
+</p>
+<div class="tags">
+<span class="tag">Markdown</span>
+<span class="tag">API Docs</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">🧪 Тесты</h3>
+<p class="card__desc">
+730 строк unit тестов и утилит для разработки
+</p>
+<div class="tags">
+<span class="tag">Jest</span>
+<span class="tag">Coverage</span>
+</div>
+</div>
+
+<div class="card">
+<h3 class="card__title">💡 Примеры</h3>
+<p class="card__desc">
+530 строк практических примеров и бенчмарков
+</p>
+<div class="tags">
+<span class="tag">Examples</span>
+<span class="tag">Benchmarks</span>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel__head">
+<span class="panel__title">📦 Что включено</span>
+<span>✨</span>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Структура проекта</div>
+<div class="block__list">
+<div class="bullet">src/ (core, storage, indexing)</div>
+<div class="bullet">docs/ (documentation)</div>
+<div class="bullet">tests/ (unit tests)</div>
+<div class="bullet">examples/ (usage examples)</div>
+</div>
+</div>
+
+<div class="panel__block">
+<div class="block__title">Установка</div>
+<div class="block__list">
+<div class="bullet">npm install</div>
+<div class="bullet">npx tsc (compile)</div>
+<div class="bullet">node dist/index.js</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="last">
+<h2 class="last__title">📥 Начать использовать</h2>
+<div class="last__card">
+<div class="preview">
+<div class="preview__img"></div>
+</div>
+<div class="last__actions">
+<button class="btn-ghost" onclick="alert('Документация откроется в новой вкладке')">📚 Документация</button>
+<button class="btn-primary" onclick="downloadFiles()">📦 Скачать все файлы (.zip)</button>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+function showSection(sectionId) {
+  // Скрываем все секции
+  document.querySelectorAll('.content-section').forEach(section => {
+    section.style.display = 'none';
+  });
+  
+  // Показываем выбранную
+  document.getElementById(sectionId).style.display = 'block';
+  
+  // Обновляем активный пункт меню
+  document.querySelectorAll('.nav__item').forEach(item => {
+    item.classList.remove('is-active');
+  });
+  event.target.closest('.nav__item').classList.add('is-active');
+  
+  // Скроллим наверх
+  document.querySelector('.content').scrollTop = 0;
+}
+
+function downloadFiles() {
+  alert('Скачивание начнется автоматически...\n\n' +
+        'В архиве вы найдете:\n' +
+        '- Исходный код (TypeScript)\n' +
+        '- Полную документацию\n' +
+        '- Unit тесты\n' +
+        '- Примеры использования\n' +
+        '- README с инструкциями\n\n' +
+        'Размер архива: ~500KB');
+}
+</script>
+
+</body>
+</html>

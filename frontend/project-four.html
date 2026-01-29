@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Node.js App Architecture</title>
+  <link rel="stylesheet" href="project-four.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <a href="./index.html" aria-label="Back">← Back</a>
+      <nav aria-label="Links">
+        <a href="#" rel="noopener">GitHub</a>
+        <a href="#" rel="noopener">Demo</a>
+      </nav>
+    </header>
+
+    <section aria-label="Intro">
+      <h1>Node.js: SSR/REST, auth, real‑time, deploy, observability</h1>
+      <p>Проект‑шаблон “как делать взрослый сервис”: роутинг, авторизация, интеграции, WebSocket‑обновления и нормальный деплой с мониторингом.</p>
+    </section>
+
+    <section aria-label="Structure">
+      <h2>Структура и безопасность</h2>
+      <p>Модули, валидация, обработка ошибок, rate limit — всё, что должно быть в базовой платформе.</p>
+      <pre><code>app.use(auth())
+app.get("/api/items", handler)
+app.use(errorBoundary())</code></pre>
+    </section>
+
+    <section aria-label="Realtime">
+      <h2>Real‑time</h2>
+      <p>Обновления в реальном времени: backpressure, reconnect, и “диффы состояния” вместо полного стейта.</p>
+      <pre><code>ws.on("message", onMsg)
+broadcast(stateDelta)</code></pre>
+    </section>
+
+    <section aria-label="Caching">
+      <h2>DB, кеш и миграции</h2>
+      <p>Индексы, кеширование, инвалидация, миграции; быстрые чтения без “развала” консистентности.</p>
+      <pre><code>cache.get(key) ?? await db.query(...)
+cache.set(key, value, ttl)</code></pre>
+    </section>
+
+    <section aria-label="Ops">
+      <h2>Docker / CI/CD / Observability</h2>
+      <p>Health checks, logs/metrics/traces, плюс окружение с OTEL и стандартными эндпоинтами для контроля.</p>
+      <pre><code>GET /healthz
+OTEL_EXPORTER=...
+docker compose up -d</code></pre>
+    </section>
+
+    <section aria-label="Notes">
+      <h2>Заметки</h2>
+      <p>Здесь можно описать, как ты избежал блокировок, где async I/O, где очереди, где батчи.</p>
+    </section>
+  </main>
+</body>
+</html>

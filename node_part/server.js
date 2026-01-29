@@ -6,7 +6,7 @@ const { URL } = require("url");
 
 const port = 3000;
 
-// ВАЖНО: server.js лежит в node_part, а фронт — на уровень выше: ../frontend
+// server.js лежит в node_part, фронт — ../frontend
 const FRONTEND_DIR = path.join(__dirname, "..", "frontend");
 
 function setCors(res) {
@@ -40,9 +40,9 @@ function mimeTypeByExt(ext) {
   }
 }
 
-// Защита от выхода из FRONTEND_DIR через ../ (path traversal) [web:31][web:35]
+// защита от ../
 function safeJoin(baseDir, requestPath) {
-  const normalized = path.normalize(requestPath).replace(/^(\.\.(\/|\\|$))+/, "");
+  const normalized = path.normalize(requestPath).replace(/^(..(\/|\\|$))+/, "");
   return path.join(baseDir, normalized);
 }
 
@@ -65,32 +65,26 @@ function serveFile(req, res, filePath) {
 
     const ext = path.extname(filePath).toLowerCase();
 
-    // --- WebP negotiation ---
-    // Если запросили png/jpg/jpeg, но есть "тот же файл + .webp" рядом,
-    // и клиент принимает image/webp, отдаем webp и ставим Vary: Accept [web:10][web:39].
+    // WebP negotiation (как у тебя было)
     let finalPath = filePath;
     let finalExt = ext;
-
     const isRaster = (ext === ".png" || ext === ".jpg" || ext === ".jpeg");
     const accept = String(req.headers["accept"] || "");
     const acceptWebp = accept.includes("image/webp");
 
     if (isRaster && acceptWebp) {
-      const candidate = filePath + ".webp"; // example.png.webp
+      const candidate = filePath + ".webp";
       try {
         if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
           finalPath = candidate;
           finalExt = ".webp";
           res.setHeader("Vary", "Accept");
         }
-      } catch {
-        // если есть проблема с fs, просто отдаем оригинал
-      }
+      } catch {}
     }
 
     res.writeHead(200, {
       "Content-Type": mimeTypeByExt(finalExt),
-      // для разработки можно no-store; для продакшена лучше кэшировать ассеты с хешами
       "Cache-Control": "no-store",
     });
 
@@ -98,6 +92,23 @@ function serveFile(req, res, filePath) {
       .on("error", () => sendJson(res, 500, { error: "Read error" }))
       .pipe(res);
   });
+}
+
+function serveFrontendPath(req, res, pathname) {
+  // 1) Главная
+  if (pathname === "/") {
+    return serveFile(req, res, safeJoin(FRONTEND_DIR, "/index.html"));
+  }
+
+  // 2) /projects/project-one.html -> /project-one.html (файлы лежат в корне frontend)
+  if (pathname.startsWith("/projects/")) {
+    const base = path.basename(pathname); // project-one.html
+    const mapped = "/" + base;            // /project-one.html
+    return serveFile(req, res, safeJoin(FRONTEND_DIR, mapped));
+  }
+
+  // 3) Все остальные файлы как есть: /styles.css, /main.js, /python.jpg ...
+  return serveFile(req, res, safeJoin(FRONTEND_DIR, pathname));
 }
 
 http.createServer(async (req, res) => {
@@ -127,11 +138,9 @@ http.createServer(async (req, res) => {
     }
   }
 
-  // Static frontend
+  // Frontend
   if (req.method === "GET") {
-    const rel = pathname === "/" ? "/index.html" : pathname;
-    const filePath = safeJoin(FRONTEND_DIR, rel);
-    return serveFile(req, res, filePath);
+    return serveFrontendPath(req, res, pathname);
   }
 
   return sendJson(res, 405, { error: "Method not allowed" });

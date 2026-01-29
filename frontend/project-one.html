@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CryptoForecast</title>
+  <link rel="stylesheet" href="project-one.css" />
+</head>
+<body>
+  <!-- фон: сетка + мягкие пятна -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg__blobs"></div>
+    <div class="bg__grid"></div>
+    <div class="bg__vignette"></div>
+  </div>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="#">
+        <span class="brand__logo" aria-hidden="true"></span>
+        <span class="brand__text">CryptoForecast</span>
+      </a>
+
+      <nav class="menu" aria-label="Навигация">
+        <a class="menu__link" href="#">Дашборд</a>
+        <a class="menu__link" href="#">Сигналы</a>
+        <a class="menu__link" href="#">Модели</a>
+        <a class="menu__link" href="#">Бэктест</a>
+        <a class="menu__link" href="#">API</a>
+        <a class="menu__link" href="#">Документация</a>
+      </nav>
+
+      <div class="header__actions">
+        <a class="btn btn--cyan" href="#">Войти</a>
+        <a class="btn btn--purple" href="#">Попробовать</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main">
+    <section class="hero">
+      <div class="hero__left">
+        <h1 class="hero__title">Прогнозируй рынок<br/>криптовалют на base ML</h1>
+        <p class="hero__subtitle">Сигналы, вероятности, риск‑менеджмент<br/>и бэктесты в одном месте</p>
+
+        <div class="hero__cta">
+          <a class="btn btn--cyan btn--lg" href="#">Открыть дашборд</a>
+          <a class="btn btn--outline btn--lg" href="#">Смотреть демо</a>
+        </div>
+      </div>
+
+      <div class="hero__right">
+        <article class="panel panel--chart">
+          <div class="panel__head">
+            <div class="panel__head-left">
+              <div class="panel__title">Prognos на 24ч</div>
+              <div class="legend">
+                <span class="dot dot--blue"></span>
+                <span class="legend__text">рост/падение</span>
+              </div>
+            </div>
+            <div class="pill">BTC/USDT</div>
+          </div>
+
+          <div class="chart" role="img" aria-label="График прогноз на 24ч (демо)">
+            <svg viewBox="0 0 820 280" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1">
+                  <stop offset="0" stop-color="#39D7FF" stop-opacity="1"/>
+                  <stop offset="1" stop-color="#39D7FF" stop-opacity=".85"/>
+                </linearGradient>
+                <linearGradient id="g2" x1="0" x2="1">
+                  <stop offset="0" stop-color="#8B5CF6" stop-opacity=".95"/>
+                  <stop offset="1" stop-color="#8B5CF6" stop-opacity=".75"/>
+                </linearGradient>
+              </defs>
+
+              <!-- горизонтальная сетка -->
+              <g class="chart__grid">
+                <line x1="0" y1="70" x2="820" y2="70"/>
+                <line x1="0" y1="140" x2="820" y2="140"/>
+                <line x1="0" y1="210" x2="820" y2="210"/>
+              </g>
+
+              <!-- линии -->
+              <path class="chart__line chart__line--cyan"
+                d="M20,205 C120,160 170,175 250,132 C330,88 410,110 480,92 C565,70 610,95 670,120 C720,145 760,130 800,158"/>
+              <path class="chart__line chart__line--purple"
+                d="M20,230 C120,210 170,214 250,195 C330,170 410,168 480,150 C565,132 610,145 670,140 C720,136 760,132 800,135"/>
+
+            </svg>
+          </div>
+
+          <div class="panel__foot">
+            <div class="legend legend--right">
+              <span class="dot dot--amber"></span>
+              <span class="legend__text">рост/падение</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="features">
+      <a class="feature feature--active" href="#">
+        <span class="feature__icon" aria-hidden="true">⦿</span>
+        <span class="feature__text">Режим реального времени</span>
+      </a>
+
+      <a class="feature" href="#">
+        <span class="feature__icon" aria-hidden="true">⌁</span>
+        <span class="feature__text">Кластеры рынка</span>
+      </a>
+
+      <a class="feature" href="#">
+        <span class="feature__icon" aria-hidden="true">⌬</span>
+        <span class="feature__text">Обнаружение аномалий</span>
+      </a>
+
+      <a class="feature" href="#">
+        <span class="feature__icon" aria-hidden="true">⎘</span>
+        <span class="feature__text">Экспорт в CSV/JSON</span>
+      </a>
+    </section>
+
+    <section class="panel panel--signals">
+      <div class="signals__head">
+        <h2 class="signals__title">Последние сигналы</h2>
+        <div class="signals__chips">
+          <span class="chip">16:9 фopds</span>
+          <span class="chip">1220×1080</span>
+        </div>
+      </div>
+
+      <div class="table" role="table" aria-label="Последние сигналы">
+        <div class="table__row table__row--head" role="row">
+          <div role="columnheader">Текер</div>
+          <div role="columnheader">Макс</div>
+          <div role="columnheader">Направление</div>
+          <div role="columnheader">Wbегрение</div>
+          <div role="columnheader">Таймфрам</div>
+          <div role="columnheader">Курпныстъь</div>
+        </div>
+
+        <div class="table__row" role="row">
+          <div class="table__strong" role="cell">BTC</div>
+          <div role="cell">ETH</div>
+          <div role="cell">Направление</div>
+          <div role="cell">Waseepинение</div>
+          <div role="cell">Таймфрий</div>
+          <div role="cell">14‑18px</div>
+        </div>
+
+        <div class="table__row" role="row">
+          <div class="table__strong" role="cell">ETH</div>
+          <div role="cell">SOL</div>
+          <div role="cell">Рост</div>
+          <div role="cell">0.63</div>
+          <div role="cell">1ч</div>
+          <div role="cell">12‑16px</div>
+        </div>
+
+        <div class="table__row" role="row">
+          <div class="table__strong" role="cell">SOL</div>
+          <div role="cell">BTC</div>
+          <div role="cell">Падение</div>
+          <div role="cell">0.58</div>
+          <div role="cell">4ч</div>
+          <div role="cell">12‑16px</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

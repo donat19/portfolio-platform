@@ -785,3 +785,77 @@ body{
     border-radius: 14px;
   }
 }
+
+
+/* ===== QR CODES (overlay on LEFT face) ===== */
+
+#left-qrs{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.qr-fly{
+  position: absolute;
+  width: 160px;
+  height: 190px;
+  border-radius: 14px;
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(245, 158, 11, 0.38);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  gap: 10px;
+  padding: 12px;
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(.22,.61,.36,1), opacity 0.6s ease;
+}
+
+.qr-fly__canvas{
+  width: 132px;
+  height: 132px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.30);
+}
+
+.qr-fly__label{
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* fixed end positions */
+.qr-fly:nth-child(1){ top: 16%; left: 16%; }
+.qr-fly:nth-child(2){ top: 16%; right: 16%; }
+.qr-fly:nth-child(3){ bottom: 16%; left: 16%; }
+.qr-fly:nth-child(4){ bottom: 16%; right: 16%; }
+
+/* start positions (from corners) */
+.qr-fly.from-tl{ transform: translate(-160%, -160%) rotate(-8deg); }
+.qr-fly.from-tr{ transform: translate(160%, -160%) rotate(8deg); }
+.qr-fly.from-bl{ transform: translate(-160%, 160%) rotate(8deg); }
+.qr-fly.from-br{ transform: translate(160%, 160%) rotate(-8deg); }
+
+#left-qrs.is-visible .qr-fly{
+  transform: translate(0, 0) rotate(0deg);
+  opacity: 1;
+}
+
+#left-qrs.is-faded .qr-fly{
+  opacity: 0;
+}
+
+@media (max-width: 520px){
+  .qr-fly{ width: 148px; height: 178px; }
+  .qr-fly__canvas{ width: 120px; height: 120px; }
+}

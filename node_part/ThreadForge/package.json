@@ -1,0 +1,8 @@
+{
+  "name": "jsondb-mvp",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  }
+}

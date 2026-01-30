@@ -1,12 +1,11 @@
-// server.js
+// node_part/server.js (CommonJS)
+
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { URL } = require("url");
 
 const port = 3000;
-
-// server.js лежит в node_part, фронт — ../frontend
 const FRONTEND_DIR = path.join(__dirname, "..", "frontend");
 
 function setCors(res) {
@@ -40,9 +39,8 @@ function mimeTypeByExt(ext) {
   }
 }
 
-// защита от ../
 function safeJoin(baseDir, requestPath) {
-  const normalized = path.normalize(requestPath).replace(/^(..(\/|\\|$))+/, "");
+  const normalized = path.normalize(requestPath).replace(/^(\.\.(\/|\\|$))+/, "");
   return path.join(baseDir, normalized);
 }
 
@@ -54,6 +52,7 @@ function readJson(req) {
       try { resolve(JSON.parse(data || "{}")); }
       catch { reject(new Error("Invalid JSON")); }
     });
+    req.on("error", reject);
   });
 }
 
@@ -95,56 +94,83 @@ function serveFile(req, res, filePath) {
 }
 
 function serveFrontendPath(req, res, pathname) {
-  // 1) Главная
   if (pathname === "/") {
     return serveFile(req, res, safeJoin(FRONTEND_DIR, "/index.html"));
   }
 
-  // 2) /projects/project-one.html -> /project-one.html (файлы лежат в корне frontend)
+  // /projects/project-one.html -> /project-one.html
   if (pathname.startsWith("/projects/")) {
-    const base = path.basename(pathname); // project-one.html
-    const mapped = "/" + base;            // /project-one.html
+    const base = path.basename(pathname);
+    const mapped = "/" + base;
     return serveFile(req, res, safeJoin(FRONTEND_DIR, mapped));
   }
 
-  // 3) Все остальные файлы как есть: /styles.css, /main.js, /python.jpg ...
   return serveFile(req, res, safeJoin(FRONTEND_DIR, pathname));
 }
 
-http.createServer(async (req, res) => {
-  setCors(res);
+async function main() {
+  // Подключаем ESM-модуль ThreadForge из CommonJS
+  const { createThreadForge } = await import("./ThreadForge/server.js");
+  const tf = await createThreadForge({
+    dir: path.join(__dirname, "ThreadForge", "data"),
+    fsyncEachWrite: true,
+    mountPath: "/db",
+  });
 
-  if (req.method === "OPTIONS") {
-    res.writeHead(204);
-    res.end();
-    return;
-  }
+  const server = http.createServer(async (req, res) => {
+    setCors(res);
 
-  const u = new URL(req.url, `http://${req.headers.host}`);
-  const pathname = u.pathname;
-
-  // API
-  if (req.method === "GET" && pathname === "/api/health") {
-    return sendJson(res, 200, { ok: true, ts: Date.now() });
-  }
-
-  if (req.method === "POST" && pathname === "/api/contact") {
-    try {
-      const payload = await readJson(req);
-      console.log("CONTACT:", payload);
-      return sendJson(res, 200, { ok: true });
-    } catch (e) {
-      return sendJson(res, 400, { error: e.message });
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      res.end();
+      return;
     }
-  }
 
-  // Frontend
-  if (req.method === "GET") {
-    return serveFrontendPath(req, res, pathname);
-  }
+    const u = new URL(req.url, `http://${req.headers.host}`);
+    const pathname = u.pathname;
 
-  return sendJson(res, 405, { error: "Method not allowed" });
-}).listen(port, () => {
-  console.log(`Server: http://localhost:${port}/`);
-  console.log(`Frontend dir: ${FRONTEND_DIR}`);
+    // ThreadForge: /db/*
+    if (pathname === "/db" || pathname.startsWith("/db/")) {
+      return tf.handle(req, res);
+    }
+
+    // API
+    if (req.method === "GET" && pathname === "/api/health") {
+      return sendJson(res, 200, { ok: true, ts: Date.now() });
+    }
+
+    if (req.method === "POST" && pathname === "/api/contact") {
+      try {
+        const payload = await readJson(req);
+        console.log("CONTACT:", payload);
+        return sendJson(res, 200, { ok: true });
+      } catch (e) {
+        return sendJson(res, 400, { error: e.message });
+      }
+    }
+
+    // Frontend
+    if (req.method === "GET") {
+      return serveFrontendPath(req, res, pathname);
+    }
+
+    return sendJson(res, 405, { error: "Method not allowed" });
+  });
+
+  server.listen(port, () => {
+    console.log(`Server: http://localhost:${port}/`);
+    console.log(`Frontend dir: ${FRONTEND_DIR}`);
+    console.log("ThreadForge mounted at /db/*");
+  });
+
+  process.on("SIGINT", async () => {
+    server.close();
+    await tf.close();
+    process.exit(0);
+  });
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
 });

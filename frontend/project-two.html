@@ -87,7 +87,8 @@
         </nav>
 
         <div class="actions">
-          <a class="btn btn--ghost" href="#">Войти</a>
+          <button type="button" class="btn btn--ghost" data-auth-open data-auth-mode="login">Войти</button>
+          <button type="button" class="btn btn--accent" data-auth-open data-auth-mode="register">Зарегистрироваться</button>
           <a class="btn btn--primary" href="#">Создать</a>
         </div>
       </header>
@@ -213,5 +214,7 @@
       </div>
     </aside>
   </div>
+  <div id="auth-root"></div>
+  <script src="auth-client.js"></script>
 </body>
 </html>

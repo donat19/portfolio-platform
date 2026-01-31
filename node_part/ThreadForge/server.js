@@ -1,11 +1,11 @@
 // node_part/ThreadForge/server.js (ESM)
+// ThreadForge как библиотека: createThreadForge() -> { handle(req,res), close(), db }
 
 import { URL } from "node:url";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-// ВАЖНО: db.js может экспортировать либо default, либо именованный JsonDb.
-// Поэтому импортируем модуль целиком и берём то, что есть.
+// db.js может экспортировать default или именованный JsonDb — поддержим оба варианта
 import * as DbMod from "./db.js";
 
 function readJson(req) {
@@ -34,16 +34,16 @@ function send(res, code, obj) {
 }
 
 export async function createThreadForge({
-  dir,                 // абсолютный путь до папки data
+  dir, // абсолютный путь до папки data
   fsyncEachWrite = true,
-  mountPath = "/db",   // префикс, под которым будет жить ThreadForge в общем сервере
+  mountPath = "/db", // где будет смонтирован в главном сервере
 } = {}) {
   const JsonDb = DbMod.default ?? DbMod.JsonDb;
   if (!JsonDb) {
     throw new Error("ThreadForge/db.js must export default or named export JsonDb");
   }
 
-  // Если dir не передали — берём node_part/ThreadForge/data (а не cwd).
+  // по умолчанию: node_part/ThreadForge/data
   const defaultDir = fileURLToPath(new URL("./data", import.meta.url));
   const dataDir = dir ? path.resolve(dir) : defaultDir;
 
@@ -69,10 +69,10 @@ export async function createThreadForge({
       }
 
       // routes:
-      // POST /:col/put body: { doc }
-      // GET  /:col/get?id=...
-      // POST /:col/del body: { id }
-      // POST /:col/find body: { ... }
+      // POST /:col/put   body: { doc }
+      // GET  /:col/get   ?id=...
+      // POST /:col/del   body: { id }
+      // POST /:col/find  body: {...}
 
       const [col, action] = parts;
       if (!col || !action) return send(res, 404, { error: "Not found" });
@@ -112,5 +112,6 @@ export async function createThreadForge({
     await db.stop();
   }
 
-  return { handle, close };
+  // ВАЖНО: db отдаём наружу, чтобы общий сервер мог делать auth без HTTP "сам-в-себя"
+  return { handle, close, db };
 }

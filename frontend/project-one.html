@@ -31,9 +31,11 @@
       </nav>
 
       <div class="header__actions">
-        <a class="btn btn--cyan" href="#">Войти</a>
+        <button type="button" class="btn btn--cyan" data-auth-open data-auth-mode="login">Войти</button>
+        <button type="button" class="btn btn--cyan" data-auth-open data-auth-mode="register">Зарегистрироваться</button>
         <a class="btn btn--purple" href="#">Попробовать</a>
       </div>
+
     </div>
   </header>
 
@@ -171,5 +173,7 @@
       </div>
     </section>
   </main>
+  <div id="auth-root"></div>
+  <script src="auth-client.js"></script>
 </body>
 </html>

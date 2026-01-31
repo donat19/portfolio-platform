@@ -113,3 +113,197 @@ a.primary{
   header{flex-wrap:wrap}
   header a{flex:1; text-align:center}
 }
+
+/* ===== auth-client.js UI (overlay + cookie) ===== */
+
+#auth-root{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Блокировка скролла страницы, когда auth-client ставит data-auth="locked" */
+body[data-auth="locked"]{
+  overflow: hidden;
+}
+
+#auth-root .auth-wrap{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+#auth-root .auth-overlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(10px);
+}
+
+#auth-root .auth-modal{
+  pointer-events: auto;
+  width: min(420px, calc(100% - 32px));
+  border-radius: 16px;
+  border: 1px solid rgba(16,24,40,.14);
+  background: rgba(255,255,255,.92);
+  color: #101828;
+  box-shadow: 0 30px 110px rgba(0,0,0,.35);
+  padding: 16px;
+}
+
+/* Акценты (подхватываем переменные тем, где есть) */
+#auth-root{
+  --auth-accent1: var(--blue, var(--brand, var(--primary1, #4ea1ff)));
+  --auth-accent2: var(--purple, var(--brand2, var(--primary2, #8b5cf6)));
+}
+
+#auth-root .auth-title{
+  font-weight: 900;
+  font-size: 18px;
+  margin: 0 0 10px;
+}
+
+#auth-root .auth-hint{
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(16,24,40,.70);
+}
+
+#auth-root .auth-error{
+  min-height: 18px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #b42318;
+}
+
+#auth-root .auth-input{
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(16,24,40,.16);
+  background: rgba(255,255,255,.96);
+  color: #101828;
+  outline: none;
+  margin-bottom: 10px;
+}
+
+#auth-root .auth-input:focus{
+  border-color: color-mix(in srgb, var(--auth-accent1) 55%, rgba(16,24,40,.16));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--auth-accent1) 18%, transparent);
+}
+
+#auth-root .auth-actions{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+#auth-root .auth-btn{
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(16,24,40,.16);
+  background: rgba(255,255,255,.92);
+  color: #101828;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+#auth-root .auth-btn--primary{
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--auth-accent1), var(--auth-accent2));
+  color: #fff;
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--auth-accent1) 22%, transparent);
+}
+
+#auth-root .auth-btn:disabled{
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+#auth-root .auth-footer{
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(16,24,40,.70);
+}
+
+#auth-root .auth-userline{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Cookie banner */
+#auth-root .cookie-banner{
+  pointer-events: auto;
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(16,24,40,.14);
+  background: rgba(255,255,255,.92);
+  color: #101828;
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 18px 60px rgba(0,0,0,.18);
+}
+
+#auth-root .cookie-banner__text{
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(16,24,40,.78);
+}
+
+#auth-root .cookie-banner__actions{
+  display: flex;
+  gap: 10px;
+}
+
+#auth-root .cookie-btn{
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--auth-accent1) 35%, rgba(16,24,40,.14));
+  background: color-mix(in srgb, var(--auth-accent1) 14%, rgba(255,255,255,.92));
+  color: #101828;
+  font-weight: 900;
+  cursor: pointer;
+}
+/* ===== Auth layering fix ===== */
+#auth-root{
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;   /* выше любых 9999 */
+  isolation: isolate;     /* отдельный stacking context */
+}
+
+/* контейнер на весь экран */
+#auth-root .auth-wrap{
+  position: fixed;
+  inset: 0;
+}
+
+/* Оверлей ВСЕГДА ниже модалки */
+#auth-root .auth-overlay{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Модалка ВСЕГДА выше оверлея */
+#auth-root .auth-modal{
+  position: relative;
+  z-index: 1;
+}
+/* по умолчанию auth UI скрыт */
+#auth-root[data-state="closed"]{ display:none; }
+#auth-root[data-state="open"]{ display:block; pointer-events:auto; }

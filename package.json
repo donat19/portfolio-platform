@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-platform",
+  "version": "1.0.0",
+  "description": "Ivan Zimalev's Portfolio Platform",
+  "main": "node_part/server.js",
+  "scripts": {
+    "start": "node node_part/server.js",
+    "dev": "node node_part/server.js"
+  },
+  "keywords": ["portfolio", "nodejs"],
+  "author": "Ivan Zimalev",
+  "license": "MIT"
+}

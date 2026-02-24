@@ -269,36 +269,13 @@
   }
 
   // ======================
-  // Cookie banner (optional)
+  // Cookie banner
   // ======================
+  // Note: Cookie consent is now handled globally by detect.js
+  // This function is kept for backward compatibility but does nothing
   function maybeShowCookieBanner() {
-    try {
-      const ok = localStorage.getItem(AUTH_STORAGE_KEY) === "1";
-      if (ok) return;
-    } catch {
-      // если localStorage запрещён — просто не показываем
-      return;
-    }
-
-    // Баннер не должен мешать — и он не должен требовать логина
-    const banner = document.createElement("div");
-    banner.className = "cookie-banner";
-    banner.innerHTML = `
-      <div class="cookie-banner__text">
-        Этот сайт использует cookie/локальное хранилище для авторизации и настроек.
-      </div>
-      <div class="cookie-banner__actions">
-        <button type="button" class="cookie-btn" data-cookie-accept>OK</button>
-      </div>
-    `;
-
-    // Важно: баннер в #auth-root, но без открытия модалки
-    root.appendChild(banner);
-
-    banner.querySelector("[data-cookie-accept]").addEventListener("click", () => {
-      try { localStorage.setItem(AUTH_STORAGE_KEY, "1"); } catch {}
-      banner.remove();
-    });
+    // Cookie banner is handled by detect.js with proper expiry logic
+    // The old AUTH_STORAGE_KEY is deprecated in favor of cookieConsent
   }
 
   // ======================

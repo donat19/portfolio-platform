@@ -7,8 +7,17 @@ const path = require("path");
 const crypto = require("node:crypto");
 const { URL } = require("url");
 
-const port = 3000;
+const HOST = "0.0.0.0";
+const PORT = 3000;
 const FRONTEND_DIR = path.join(__dirname, "..", "frontend");
+
+/* ----------------- Device Detection ----------------- */
+function detectDevice(req) {
+  const ua = req.headers['user-agent'] || '';
+  const isMobile = /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  const isTablet = /iPad|Tablet|(Android(?!.*Mobile))/i.test(ua);
+  return { isMobile, isTablet, isDesktop: !isMobile && !isTablet };
+}
 
 /* ----------------- CORS ----------------- */
 function setCors(res) {
@@ -159,12 +168,46 @@ function serveFile(req, res, filePath) {
 }
 
 function serveFrontendPath(req, res, pathname) {
-  // /
-  if (pathname === "/") {
+  // Add Vary header for CDN/proxy caching based on User-Agent
+  res.setHeader('Vary', 'User-Agent');
+
+  // / or /index.html — device-aware routing
+  if (pathname === "/" || pathname === "/index.html") {
+    const { isMobile, isTablet } = detectDevice(req);
+    
+    let fileName = "index.html";
+    
+    if (isMobile) {
+      fileName = "mobile.html";
+    } else if (isTablet) {
+      // Serve tablet.html if exists, otherwise mobile.html
+      const tabletPath = path.join(FRONTEND_DIR, "tablet.html");
+      if (fs.existsSync(tabletPath)) {
+        fileName = "tablet.html";
+      } else {
+        fileName = "mobile.html";
+      }
+    }
+    
+    const filePath = safeJoin(FRONTEND_DIR, "/" + fileName);
+    
+    // Prevent aggressive caching for HTML files
+    res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    return serveFile(req, res, filePath);
+  }
+
+  // Direct file access: /mobile.html, /desktop.html
+  if (pathname === "/mobile.html") {
+    res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    return serveFile(req, res, safeJoin(FRONTEND_DIR, "/mobile.html"));
+  }
+
+  if (pathname === "/desktop.html" || pathname === "/index.html") {
+    res.setHeader('Cache-Control', 'no-cache, must-revalidate');
     return serveFile(req, res, safeJoin(FRONTEND_DIR, "/index.html"));
   }
 
-  // /projects/project-one.html -> /project-one.html (файлы лежат в корне frontend)
+  // /projects/project-one.html -> /project-one.html
   if (pathname.startsWith("/projects/")) {
     const base = path.basename(pathname);
     const mapped = "/" + base;
@@ -341,8 +384,8 @@ async function main() {
     return sendJson(res, 405, { error: "Method not allowed" });
   });
 
-  server.listen(port, () => {
-    console.log(`Server: http://localhost:${port}/`);
+  server.listen(PORT, HOST, () => {
+    console.log(`Server running at http://16.52.38.245:${PORT}/`);
     console.log(`Frontend dir: ${FRONTEND_DIR}`);
     console.log("ThreadForge mounted at /db/*");
   });

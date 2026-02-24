@@ -1,0 +1,1944 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <script src="detect.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Portfolio - Ivan Zimalev</title>
+  <style>
+    /* ===== CSS VARIABLES (from desktop) ===== */
+    :root {
+      --bg0: #0b1220;
+      --bg1: #111c34;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --stroke: rgba(148,163,184,0.22);
+
+      --accent: #22d3ee;
+      --accent2: #60a5fa;
+      --accent3: #a855f7;
+      --focus: rgba(34,211,238,0.35);
+
+      /* Mobile-specific */
+      --nav-height: 56px;
+      --touch-target: 48px;
+      --max-width: 480px;
+      --section-padding: 60px 20px;
+    }
+
+    /* ===== BASE RESET ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--nav-height) + 16px);
+      font-size: 16px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      padding-top: var(--nav-height);
+      background: radial-gradient(1200px 800px at 20% 15%, var(--bg1), var(--bg0));
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1, h2, h3, h4 {
+      margin: 0;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ===== LAYOUT CONTAINER ===== */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ===== STICKY NAVIGATION ===== */
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: linear-gradient(to bottom, rgba(15,23,42,0.92), rgba(15,23,42,0.78));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--stroke);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 1000;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .nav-bar.scrolled {
+      background: rgba(15,23,42,0.95);
+      border-bottom-color: rgba(148,163,184,0.3);
+    }
+
+    .nav-bar__brand {
+      font-size: 17px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-bar__toggle {
+      width: var(--touch-target);
+      height: var(--touch-target);
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.9);
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nav-bar__toggle:active {
+      transform: scale(0.95);
+      background: rgba(34,211,238,0.1);
+    }
+
+    /* Slide-out Menu */
+    .nav-menu {
+      position: fixed;
+      top: var(--nav-height);
+      right: 0;
+      width: min(280px, 85vw);
+      max-height: calc(100vh - var(--nav-height));
+      background: rgba(15,23,42,0.98);
+      border-left: 1px solid var(--stroke);
+      border-radius: 16px 0 0 16px;
+      padding: 12px 0;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 999;
+      overflow-y: auto;
+    }
+
+    .nav-menu.is-open {
+      transform: translateX(0);
+    }
+
+    .nav-menu a {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      color: rgba(255,255,255,0.88);
+      font-size: 15px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+      min-height: var(--touch-target);
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.is-active {
+      background: rgba(34,211,238,0.08);
+      border-left-color: var(--accent);
+      color: rgba(255,255,255,0.98);
+    }
+
+    .nav-menu a:active {
+      background: rgba(34,211,238,0.12);
+    }
+
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+      z-index: 998;
+    }
+
+    .menu-overlay.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      padding: var(--section-padding);
+      border-bottom: 1px solid rgba(148,163,184,0.08);
+    }
+
+    .section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section__title {
+      font-size: clamp(1.4rem, 5vw, 1.75rem);
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      min-height: calc(100dvh - var(--nav-height));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at 30% 20%, rgba(34,211,238,0.08) 0%, transparent 50%),
+                  radial-gradient(ellipse at 70% 80%, rgba(96,165,250,0.06) 0%, transparent 50%);
+      animation: heroBgPulse 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes heroBgPulse {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-5%, 5%) scale(1.05); }
+    }
+
+    .hero__photo {
+      width: clamp(140px, 35vw, 200px);
+      height: clamp(140px, 35vw, 200px);
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5),
+                  0 0 0 1px rgba(255,255,255,0.08) inset;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero__photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero__name {
+      font-size: clamp(2rem, 8vw, 2.75rem);
+      margin-bottom: 10px;
+      letter-spacing: -0.03em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero__tagline {
+      font-size: clamp(1rem, 4vw, 1.25rem);
+      color: var(--muted);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero__text {
+      font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.82);
+      max-width: 420px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero__scroll {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      opacity: 1;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .hero__scroll.hidden {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+      pointer-events: none;
+    }
+
+    .hero__scroll svg {
+      width: 20px;
+      height: 20px;
+      animation: scrollBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ===== SKILL CARDS ===== */
+    .skill-card {
+      border-radius: 20px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(34,211,238,0.08), rgba(15,23,42,0.5));
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .skill-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: radial-gradient(400px 200px at 20% 10%, rgba(255,255,255,0.06), transparent 50%);
+      pointer-events: none;
+    }
+
+    .skill-card:active {
+      transform: scale(0.98);
+      border-color: rgba(34,211,238,0.4);
+    }
+
+    .skill-card__header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .skill-card__icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, rgba(34,211,238,0.15), rgba(34,211,238,0.05));
+      border: 1px solid rgba(34,211,238,0.25);
+      display: grid;
+      place-items: center;
+    }
+
+    .skill-card__icon img {
+      width: 65%;
+      height: 65%;
+      object-fit: contain;
+    }
+
+    .skill-card__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .skill-card__text {
+      font-size: clamp(0.9rem, 3.5vw, 1rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.82);
+    }
+
+    /* ===== STACK SECTION ===== */
+    .stack-intro {
+      font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 24px;
+    }
+
+    .stack-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .stack-block {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(15,23,42,0.45);
+      padding: 18px;
+      transition: border-color 0.2s ease;
+    }
+
+    .stack-block:active {
+      border-color: rgba(34,211,238,0.35);
+    }
+
+    .stack-block h3 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 14px;
+    }
+
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .stack-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(255,255,255,0.05);
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.92);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .stack-tag:active {
+      transform: scale(0.95);
+      background: rgba(34,211,238,0.12);
+      border-color: rgba(34,211,238,0.4);
+    }
+
+    .stack-footer {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+    }
+
+    .stack-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(34,211,238,0.35);
+      background: rgba(34,211,238,0.1);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .stack-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ===== PROJECTS CAROUSEL ===== */
+    .projects-intro {
+      font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 24px;
+    }
+
+    .carousel {
+      position: relative;
+      margin: 0 -20px;
+      padding: 0 20px;
+    }
+
+    .carousel-viewport {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .carousel-viewport::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel-track {
+      display: flex;
+      width: max-content;
+    }
+
+    .project-card {
+      flex: 0 0 calc(100vw - 40px);
+      max-width: 440px;
+      scroll-snap-align: start;
+      padding: 4px;
+    }
+
+    .project-card__inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      border-radius: 20px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(96,165,250,0.1), rgba(15,23,42,0.65));
+      padding: 26px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      will-change: transform;
+    }
+
+    .project-card__inner:active {
+      transform: scale(0.97);
+      border-color: rgba(96,165,250,0.4);
+    }
+
+    .project-card__title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: -0.02em;
+    }
+
+    .project-card__desc {
+      font-size: clamp(0.9rem, 3.5vw, 1rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.78);
+      flex: 1;
+    }
+
+    .project-card__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .project-card__link svg {
+      transition: transform 0.2s ease;
+    }
+
+    .project-card__inner:active .project-card__link svg {
+      transform: translateX(4px);
+    }
+
+    /* Carousel Navigation */
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(15,23,42,0.85);
+      border: 1px solid var(--stroke);
+      color: rgba(255,255,255,0.9);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .carousel-nav:active {
+      transform: translateY(-50%) scale(0.9);
+      background: rgba(34,211,238,0.15);
+      border-color: rgba(34,211,238,0.4);
+    }
+
+    .carousel-nav--prev { left: 8px; }
+    .carousel-nav--next { right: 8px; }
+
+    .carousel-nav svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Carousel Indicators */
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .carousel-dot.is-active {
+      background: var(--accent);
+      transform: scale(1.25);
+    }
+
+    .carousel-dot:active {
+      transform: scale(1.1);
+    }
+
+    /* Swipe Hint */
+    .swipe-hint {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .swipe-hint.visible {
+      opacity: 1;
+    }
+
+    .swipe-hint svg {
+      width: 18px;
+      height: 18px;
+      animation: swipeSlide 1.5s ease-in-out infinite;
+    }
+
+    @keyframes swipeSlide {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(6px); }
+    }
+
+    /* ===== CONTACTS SECTION ===== */
+    .contacts-intro {
+      font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 24px;
+    }
+
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .contact-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 22px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(15,23,42,0.5));
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      min-height: var(--touch-target);
+    }
+
+    .contact-card:active {
+      transform: scale(0.96);
+    }
+
+    .contact-card__icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.15), rgba(34,211,238,0.05));
+      border: 1px solid rgba(34,211,238,0.25);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      margin-bottom: 10px;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .contact-card:active .contact-card__icon {
+      border-color: rgba(34,211,238,0.45);
+      background: linear-gradient(180deg, rgba(34,211,238,0.2), rgba(34,211,238,0.08));
+    }
+
+    .contact-card__icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .contact-card__label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 4px;
+    }
+
+    .contact-card__value {
+      font-size: 12px;
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    .contact-card--accent {
+      border-color: rgba(96,165,250,0.3);
+      background: linear-gradient(180deg, rgba(96,165,250,0.1), rgba(15,23,42,0.5));
+    }
+
+    .contact-card--accent .contact-card__icon {
+      background: linear-gradient(180deg, rgba(96,165,250,0.2), rgba(96,165,250,0.06));
+      border-color: rgba(96,165,250,0.3);
+      color: var(--accent2);
+    }
+
+    .contact-card--accent:active .contact-card__icon {
+      border-color: rgba(96,165,250,0.5);
+    }
+
+    /* Auth Button */
+    .auth-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(15,23,42,0.55));
+      color: rgba(255,255,255,0.95);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      min-height: var(--touch-target);
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .auth-btn:active {
+      transform: scale(0.97);
+      border-color: rgba(34,211,238,0.45);
+      background: linear-gradient(180deg, rgba(34,211,238,0.18), rgba(15,23,42,0.6));
+    }
+
+    /* ===== QR SECTION ===== */
+    .qr-section {
+      text-align: center;
+    }
+
+    .qr-intro {
+      font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+      line-height: 1.7;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 24px;
+    }
+
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .qr-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qr-canvas {
+      width: 130px;
+      height: 130px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 14px;
+      box-shadow: 0 14px 50px rgba(0,0,0,0.4),
+                  0 0 0 1px rgba(255,255,255,0.1) inset;
+    }
+
+    .qr-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 32px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid rgba(148,163,184,0.12);
+      background: linear-gradient(to top, rgba(15,23,42,0.95), rgba(15,23,42,0.4));
+    }
+
+    .footer a {
+      color: rgba(255,255,255,0.88);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      transition: border-color 0.2s ease;
+    }
+
+    .footer a:active {
+      border-bottom-color: var(--accent);
+    }
+
+    /* ===== HIGHLIGHT STYLES ===== */
+    .hl {
+      position: relative;
+      display: inline;
+      padding: 0 0.1em;
+      border-radius: 0.25em;
+    }
+
+    .hl--mark {
+      background: linear-gradient(180deg, transparent 55%, rgba(34,211,238,0.2) 0);
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .hl--grad {
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hl--u {
+      text-decoration-line: underline;
+      text-decoration-color: rgba(34,211,238,0.8);
+      text-decoration-thickness: 0.12em;
+      text-underline-offset: 0.15em;
+    }
+
+    /* ===== ANIMATIONS (scroll-triggered) ===== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 360px) {
+      :root {
+        font-size: 14px;
+      }
+
+      .nav-bar {
+        padding: 0 12px;
+      }
+
+      .container {
+        padding: 0 16px;
+      }
+
+      .section {
+        padding: 48px 16px;
+      }
+
+      .hero__photo {
+        width: 120px;
+        height: 120px;
+      }
+
+      .contacts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .qr-grid {
+        gap: 14px;
+      }
+
+      .qr-canvas {
+        width: 110px;
+        height: 110px;
+      }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .hero {
+        min-height: auto;
+        padding: 32px 20px;
+      }
+
+      .hero__photo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 16px;
+      }
+
+      .nav-bar {
+        height: 44px;
+      }
+
+      .nav-menu {
+        top: 44px;
+        max-height: calc(100vh - 44px);
+      }
+
+      :root {
+        --nav-height: 44px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* Version Switcher Button */
+    .version-switch {
+      display: block;
+      margin: 20px auto 0;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), rgba(15,23,42,0.55));
+      color: rgba(255,255,255,0.95);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .version-switch:active {
+      transform: scale(0.96);
+      background: linear-gradient(180deg, rgba(34,211,238,0.18), rgba(15,23,42,0.6));
+      border-color: rgba(34,211,238,0.4);
+    }
+
+    /* ── Cookie Banner ── */
+    #cookie-banner {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      z-index: 9999;
+
+      width: min(480px, calc(100vw - 40px));
+      padding: 20px 24px;
+      border-radius: 18px;
+
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.05) inset;
+
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      opacity: 0;
+      transition:
+        transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.3s ease;
+    }
+
+    #cookie-banner[hidden] {
+      display: none;
+    }
+
+    #cookie-banner.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    #cookie-banner.hiding {
+      transform: translateX(-50%) translateY(130%);
+      opacity: 0;
+    }
+
+    .cookie-text {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .cookie-text a {
+      color: var(--accent, #22d3ee);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .cookie-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .cookie-btn {
+      padding: 9px 22px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cookie-btn:active {
+      transform: scale(0.95);
+    }
+
+    .cookie-btn-accept {
+      background: var(--accent, #22d3ee);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(34, 211, 238, 0.35);
+    }
+
+    .cookie-btn-accept:hover {
+      opacity: 0.9;
+      box-shadow: 0 6px 20px rgba(34, 211, 238, 0.5);
+    }
+
+    .cookie-btn-decline {
+      background: transparent;
+      color: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .cookie-btn-decline:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    @media (max-width: 480px) {
+      #cookie-banner {
+        bottom: 16px;
+        padding: 16px 18px;
+        border-radius: 14px;
+      }
+
+      .cookie-buttons {
+        flex-direction: column-reverse;
+      }
+
+      .cookie-btn {
+        width: 100%;
+        padding: 12px;
+        text-align: center;
+        min-height: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky Navigation -->
+  <nav class="nav-bar" aria-label="Main navigation">
+    <span class="nav-bar__brand">Portfolio</span>
+    <button class="nav-bar__toggle" id="navToggle" aria-label="Menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Slide-out Menu -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <div class="nav-menu" id="navMenu">
+    <a href="#hero" class="is-active">About me</a>
+    <a href="#skills">Node.js skills</a>
+    <a href="#python">Python skills</a>
+    <a href="#stack">Stack</a>
+    <a href="#projects">Projects</a>
+    <a href="#contacts">Contacts</a>
+  </div>
+
+  <main>
+    <!-- Hero / About Section -->
+    <section class="section hero" id="hero">
+      <div class="hero__photo">
+        <img src="photo_2026-01-27_21-14-46.png" alt="Ivan Zimalev" loading="lazy" />
+      </div>
+      <h1 class="hero__name">
+        <span class="hl hl--mark">Ivan Zimalev</span>
+      </h1>
+      <p class="hero__tagline">
+        <span class="hl hl--u">backend developer</span>
+      </p>
+      <p class="hero__text">
+        Graduate of the <span class="hl hl--mark">Software Engineering</span> program at
+        <span class="hl hl--mark">Caine College</span>. Interested in
+        <span class="hl hl--grad">AI</span> and building backend services with
+        <span class="hl hl--grad">Node.js</span> and <span class="hl hl--grad">Python</span>.
+      </p>
+      <div class="hero__scroll" id="heroScroll">
+        <span>Scroll</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Node.js Skills Section -->
+    <section class="section" id="skills">
+      <h2 class="section__title">
+        <span class="hl hl--grad">Node.js</span> skills
+      </h2>
+      <div class="skill-card fade-up">
+        <div class="skill-card__header">
+          <div class="skill-card__icon">
+            <img src="nodejs-icon.svg" alt="Node.js" loading="lazy">
+          </div>
+          <h3 class="skill-card__title">Node.js Development</h3>
+        </div>
+        <p class="skill-card__text">
+          I can develop backend applications in Node.js, work with asynchronous code
+          and event loops, create REST APIs in Express, connect and use databases,
+          implement authentication and basic security, write tests, set up logging
+          and debugging, optimize performance, and deploy services using Docker.
+        </p>
+      </div>
+    </section>
+
+    <!-- Python Skills Section -->
+    <section class="section" id="python">
+      <h2 class="section__title">
+        <span class="hl hl--grad">Python</span> skills
+      </h2>
+      <div class="skill-card fade-up">
+        <div class="skill-card__header">
+          <div class="skill-card__icon">
+            <img src="python.jpg" alt="Python" loading="lazy" style="object-fit: cover;">
+          </div>
+          <h3 class="skill-card__title">Python Development</h3>
+        </div>
+        <p class="skill-card__text">
+          I can develop backend applications in Python, write clean and maintainable code,
+          build REST APIs (for example with FastAPI or Django/DRF), work with asynchronous
+          programming (async/await) and background tasks, connect and work with databases
+          using ORMs, implement authentication and basic security, write tests with pytest,
+          set up logging and debugging, optimize performance (profiling/caching), and deploy
+          services using Docker.
+        </p>
+      </div>
+    </section>
+
+    <!-- Stack Section -->
+    <section class="section" id="stack">
+      <h2 class="section__title">Stack</h2>
+      <p class="stack-intro fade-up">
+        Technologies and tools I work with daily to build reliable, scalable backends.
+      </p>
+      <div class="stack-grid">
+        <div class="stack-block fade-up">
+          <h3>Backend</h3>
+          <div class="stack-tags">
+            <span class="stack-tag">Node.js</span>
+            <span class="stack-tag">Express</span>
+            <span class="stack-tag">Python</span>
+            <span class="stack-tag">FastAPI</span>
+            <span class="stack-tag">Django</span>
+          </div>
+        </div>
+        <div class="stack-block fade-up">
+          <h3>Data</h3>
+          <div class="stack-tags">
+            <span class="stack-tag">PostgreSQL</span>
+            <span class="stack-tag">MongoDB</span>
+            <span class="stack-tag">Redis</span>
+            <span class="stack-tag">SQLAlchemy</span>
+          </div>
+        </div>
+        <div class="stack-block fade-up">
+          <h3>DevOps</h3>
+          <div class="stack-tags">
+            <span class="stack-tag">Docker</span>
+            <span class="stack-tag">Git</span>
+            <span class="stack-tag">Linux</span>
+            <span class="stack-tag">CI/CD</span>
+          </div>
+        </div>
+      </div>
+      <div class="stack-footer fade-up">
+        <span class="stack-chip">Full-Stack Capable</span>
+        <span class="stack-dot"></span>
+        <span>Open to new tools &amp; frameworks</span>
+      </div>
+    </section>
+
+    <!-- Projects Carousel Section -->
+    <section class="section" id="projects">
+      <h2 class="section__title">
+        <span class="hl hl--grad">Projects</span>
+      </h2>
+      <p class="projects-intro fade-up">
+        I build production-ready services, internal tools, and APIs.
+        I focus on clean architecture, performance, and reliability.
+      </p>
+
+      <div class="carousel fade-up">
+        <button class="carousel-nav carousel-nav--prev" id="carouselPrev" aria-label="Previous project">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="carousel-viewport" id="carouselViewport">
+          <div class="carousel-track">
+            <!-- Project 1: Crypto Forecast -->
+            <div class="project-card">
+              <a href="project-one.html" class="project-card__inner">
+                <h3 class="project-card__title">Crypto Forecast</h3>
+                <p class="project-card__desc">
+                  A collection of AI tools for cryptocurrency market analysis.
+                  Real-time signals, probability predictions, risk management, and backtests in one place.
+                </p>
+                <span class="project-card__link">
+                  View Project
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+            <!-- Project 2: PromptCanvas -->
+            <div class="project-card">
+              <a href="project-two.html" class="project-card__inner">
+                <h3 class="project-card__title">PromptCanvas</h3>
+                <p class="project-card__desc">
+                  Neural network for generating images using VQ VAE technology.
+                  Generate images from text prompts in seconds with style control and quality settings.
+                </p>
+                <span class="project-card__link">
+                  View Project
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+            <!-- Project 3: Thread Forge -->
+            <div class="project-card">
+              <a href="project-three.html" class="project-card__inner">
+                <h3 class="project-card__title">Thread Forge</h3>
+                <p class="project-card__desc">
+                  Rethinking databases for rapid deployment for small commercial and non-commercial use.
+                  Production-Ready JSON Database with ACID transactions, WAL, and B-Tree indexes.
+                </p>
+                <span class="project-card__link">
+                  View Project
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+            <!-- Project 4: Portfolio Cube -->
+            <div class="project-card">
+              <a href="index.html" class="project-card__inner">
+                <h3 class="project-card__title">Portfolio Cube</h3>
+                <p class="project-card__desc">
+                  An interesting experiment/portfolio exploring the possibilities of 3D in CSS.
+                  Interactive 3D cube navigation showcasing modern web capabilities.
+                </p>
+                <span class="project-card__link">
+                  View Project
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-nav carousel-nav--next" id="carouselNext" aria-label="Next project">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="swipe-hint" id="swipeHint">
+          <span>Swipe</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <div class="carousel-dots" id="carouselDots">
+        <button class="carousel-dot is-active" data-index="0" aria-label="Project 1"></button>
+        <button class="carousel-dot" data-index="1" aria-label="Project 2"></button>
+        <button class="carousel-dot" data-index="2" aria-label="Project 3"></button>
+        <button class="carousel-dot" data-index="3" aria-label="Project 4"></button>
+      </div>
+    </section>
+
+    <!-- Contacts Section -->
+    <section class="section" id="contacts">
+      <h2 class="section__title">
+        Let's <span class="hl hl--grad">Connect</span>
+      </h2>
+      <p class="contacts-intro fade-up">
+        Open to interesting projects and collaborations
+      </p>
+
+      <div class="contacts-grid">
+        <a href="izymalov@gmail.com" class="contact-card fade-up">
+          <div class="contact-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+          </div>
+          <div class="contact-card__label">Email</div>
+          <div class="contact-card__value">izymalov@gmail.com</div>
+        </a>
+
+        <a href="https://github.com/donat19" target="_blank" rel="noopener noreferrer" class="contact-card fade-up">
+          <div class="contact-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+              <path d="M9 18c-4.51 2-5-2-7-2"/>
+            </svg>
+          </div>
+          <div class="contact-card__label">GitHub</div>
+          <div class="contact-card__value">github.com/donat19</div>
+        </a>
+
+        <a href="https://www.linkedin.com/in/ivan-zymalov-287534243/" target="_blank" rel="noopener noreferrer" class="contact-card fade-up">
+          <div class="contact-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+          </div>
+          <div class="contact-card__label">LinkedIn</div>
+          <div class="contact-card__value">linkedin.com/in/ivan-zymalov</div>
+        </a>
+
+        <a href="#" class="contact-card contact-card--accent fade-up" onclick="alert('CV будет доступно скоро!'); return false;">
+          <div class="contact-card__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="12" y1="18" x2="12" y2="12"/>
+              <line x1="9" y1="15" x2="15" y2="15"/>
+            </svg>
+          </div>
+          <div class="contact-card__label">Download</div>
+          <div class="contact-card__value">My Resume (CV)</div>
+        </a>
+      </div>
+
+      <button class="auth-btn fade-up" data-auth-open data-auth-mode="login">
+        Sign In / Register
+      </button>
+    </section>
+
+    <!-- QR Codes Section -->
+    <section class="section qr-section" id="qr">
+      <h2 class="section__title">Quick Connect</h2>
+      <p class="qr-intro fade-up">
+        Scan to save my contact info
+      </p>
+      <div class="qr-grid" id="qrGrid">
+        <!-- QR codes will be generated by JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div>
+      <span id="year"></span> Ivan Zimalev. All rights reserved.
+    </div>
+    <div style="margin-top: 10px;">
+      Some icons/images are provided by
+      <a href="https://icons8.com" target="_blank" rel="noopener noreferrer">Icons8</a>.
+    </div>
+    <button class="version-switch" onclick="switchToDesktop()" type="button" aria-label="Switch to desktop version">
+      🖥 Desktop version
+    </button>
+  </footer>
+
+  <!-- Cookie Banner -->
+  <div id="cookie-banner" hidden>
+    <p class="cookie-text">
+      Этот сайт использует cookies для улучшения работы.
+    </p>
+    <div class="cookie-buttons">
+      <button class="cookie-btn cookie-btn-decline" onclick="declineCookies()" type="button">
+        Отклонить
+      </button>
+      <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()" type="button">
+        Принять
+      </button>
+    </div>
+  </div>
+
+  <!-- Auth root -->
+  <div id="auth-root"></div>
+
+  <!-- Scripts -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Mobile Navigation -->
+  <script>
+    (function() {
+      const toggle = document.getElementById('navToggle');
+      const menu = document.getElementById('navMenu');
+      const overlay = document.getElementById('menuOverlay');
+      const links = menu.querySelectorAll('a');
+      const navBar = document.querySelector('.nav-bar');
+
+      function openMenu() {
+        menu.classList.add('is-open');
+        overlay.classList.add('is-visible');
+        toggle.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMenu() {
+        menu.classList.remove('is-open');
+        overlay.classList.remove('is-visible');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      toggle.addEventListener('click', function() {
+        if (menu.classList.contains('is-open')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      overlay.addEventListener('click', closeMenu);
+
+      links.forEach(function(link) {
+        link.addEventListener('click', closeMenu);
+      });
+
+      // Nav bar scroll effect
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 20) {
+          navBar.classList.add('scrolled');
+        } else {
+          navBar.classList.remove('scrolled');
+        }
+      });
+
+      // Active link highlighting on scroll
+      const sections = ['hero', 'skills', 'python', 'stack', 'projects', 'contacts'];
+
+      window.addEventListener('scroll', function() {
+        const scrollPos = window.scrollY + 100;
+
+        sections.forEach(function(id, index) {
+          const section = document.getElementById(id);
+          if (section) {
+            const top = section.offsetTop;
+            const height = section.offsetHeight;
+
+            if (scrollPos >= top && scrollPos < top + height) {
+              links.forEach(function(link) {
+                link.classList.remove('is-active');
+              });
+              links[index].classList.add('is-active');
+            }
+          }
+        });
+      });
+
+      // Hide hero scroll indicator
+      const heroScroll = document.getElementById('heroScroll');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 100) {
+          heroScroll.classList.add('hidden');
+        } else {
+          heroScroll.classList.remove('hidden');
+        }
+      });
+    })();
+  </script>
+
+  <!-- Projects Carousel with Swipe Support -->
+  <script>
+    (function() {
+      const viewport = document.getElementById('carouselViewport');
+      const prevBtn = document.getElementById('carouselPrev');
+      const nextBtn = document.getElementById('carouselNext');
+      const dots = document.querySelectorAll('.carousel-dot');
+      const cards = document.querySelectorAll('.project-card');
+      const swipeHint = document.getElementById('swipeHint');
+
+      let currentIndex = 0;
+      const totalCards = cards.length;
+      const cardWidth = Math.min(window.innerWidth - 40, 440);
+
+      function updateCarousel() {
+        viewport.scrollTo({
+          left: currentIndex * cardWidth,
+          behavior: 'smooth'
+        });
+        updateDots();
+      }
+
+      function updateDots() {
+        dots.forEach(function(dot, index) {
+          dot.classList.toggle('is-active', index === currentIndex);
+        });
+      }
+
+      function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= totalCards) index = totalCards - 1;
+        currentIndex = index;
+        updateCarousel();
+      }
+
+      prevBtn.addEventListener('click', function() {
+        goToSlide(currentIndex - 1);
+      });
+
+      nextBtn.addEventListener('click', function() {
+        goToSlide(currentIndex + 1);
+      });
+
+      dots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          goToSlide(parseInt(this.dataset.index));
+        });
+      });
+
+      // Track scroll position
+      viewport.addEventListener('scroll', function() {
+        const scrollLeft = viewport.scrollLeft;
+        currentIndex = Math.round(scrollLeft / cardWidth);
+        updateDots();
+      });
+
+      // Show swipe hint on first load, hide after interaction
+      setTimeout(function() {
+        swipeHint.classList.add('visible');
+      }, 500);
+
+      function hideHint() {
+        swipeHint.classList.remove('visible');
+        viewport.removeEventListener('scroll', hideHint);
+        viewport.removeEventListener('touchstart', hideHint);
+      }
+
+      viewport.addEventListener('scroll', hideHint);
+      viewport.addEventListener('touchstart', hideHint);
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') goToSlide(currentIndex - 1);
+        if (e.key === 'ArrowRight') goToSlide(currentIndex + 1);
+      });
+
+      // Handle resize
+      window.addEventListener('resize', function() {
+        const newCardWidth = Math.min(window.innerWidth - 40, 440);
+        viewport.scrollTo({
+          left: currentIndex * newCardWidth,
+          behavior: 'smooth'
+        });
+      });
+    })();
+  </script>
+
+  <!-- Scroll Animations -->
+  <script>
+    (function() {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.fade-up').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+  </script>
+
+  <!-- QR Code Generator -->
+  <script>
+    function utf8Bytes(str) {
+      return new TextEncoder().encode(str);
+    }
+
+    function makeBitBuffer() {
+      const bits = [];
+      return {
+        push(value, length) {
+          for (let i = length - 1; i >= 0; i--) bits.push((value >>> i) & 1);
+        },
+        get length() { return bits.length; },
+        toBytes() {
+          const out = [];
+          for (let i = 0; i < bits.length; i += 8) {
+            let b = 0;
+            for (let j = 0; j < 8; j++) b = (b << 1) | (bits[i + j] || 0);
+            out.push(b);
+          }
+          return out;
+        }
+      };
+    }
+
+    const QR_TOTAL_CW = [0, 26, 44, 70, 100];
+    const QR_EC_CW_L = [0, 7, 10, 15, 20];
+    const QR_DATA_CW_L = QR_TOTAL_CW.map((t, i) => (t ? t - QR_EC_CW_L[i] : 0));
+
+    function pickVersionForBytes(n) {
+      const caps = [0, 17, 32, 53, 78];
+      for (let v = 1; v <= 4; v++) if (n <= caps[v]) return v;
+      return 4;
+    }
+
+    function buildCodewords(text) {
+      const data = utf8Bytes(text);
+      const version = pickVersionForBytes(data.length);
+      const bb = makeBitBuffer();
+
+      bb.push(0b0100, 4);
+      bb.push(data.length, 8);
+      for (const b of data) bb.push(b, 8);
+      bb.push(0, 4);
+      while (bb.length % 8 !== 0) bb.push(0, 1);
+
+      let bytes = bb.toBytes();
+      const dataCw = QR_DATA_CW_L[version];
+      const pads = [0xec, 0x11];
+      let padIdx = 0;
+      while (bytes.length < dataCw) bytes.push(pads[padIdx++ & 1]);
+
+      const ecLen = QR_EC_CW_L[version];
+      const ec = rsCompute(bytes, ecLen);
+      return { version, codewords: bytes.concat(ec) };
+    }
+
+    const GF_EXP = new Uint8Array(512);
+    const GF_LOG = new Uint8Array(256);
+
+    (function initGf() {
+      let x = 1;
+      for (let i = 0; i < 255; i++) {
+        GF_EXP[i] = x;
+        GF_LOG[x] = i;
+        x <<= 1;
+        if (x & 0x100) x ^= 0x11d;
+      }
+      for (let i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
+    })();
+
+    function gfMul(a, b) {
+      if (a === 0 || b === 0) return 0;
+      return GF_EXP[GF_LOG[a] + GF_LOG[b]];
+    }
+
+    function rsGenerator(ecLen) {
+      let poly = [1];
+      for (let i = 0; i < ecLen; i++) {
+        const next = new Array(poly.length + 1).fill(0);
+        for (let j = 0; j < poly.length; j++) {
+          next[j] ^= gfMul(poly[j], GF_EXP[i]);
+          next[j + 1] ^= poly[j];
+        }
+        poly = next;
+      }
+      return poly;
+    }
+
+    function rsCompute(dataBytes, ecLen) {
+      const gen = rsGenerator(ecLen);
+      const res = new Array(ecLen).fill(0);
+      for (const b of dataBytes) {
+        const factor = b ^ res[0];
+        res.shift();
+        res.push(0);
+        for (let j = 0; j < ecLen; j++) res[j] ^= gfMul(gen[j], factor);
+      }
+      return res;
+    }
+
+    function makeMatrix(size) {
+      const m = Array.from({ length: size }, () => Array(size).fill(null));
+      const reserved = Array.from({ length: size }, () => Array(size).fill(false));
+      return { m, reserved };
+    }
+
+    function setModule(ctx, r, c, val, isReserved) {
+      ctx.m[r][c] = val;
+      if (isReserved) ctx.reserved[r][c] = true;
+    }
+
+    function placeFinder(ctx, r0, c0) {
+      const size = ctx.m.length;
+      for (let r = -1; r <= 7; r++) {
+        for (let c = -1; c <= 7; c++) {
+          const rr = r0 + r, cc = c0 + c;
+          if (rr < 0 || rr >= size || cc < 0 || cc >= size) continue;
+          const onBorder = r === -1 || r === 7 || c === -1 || c === 7;
+          const inOuter = r >= 0 && r <= 6 && c >= 0 && c <= 6;
+          const inInner = r >= 2 && r <= 4 && c >= 2 && c <= 4;
+          if (onBorder) setModule(ctx, rr, cc, false);
+          else if (inOuter) setModule(ctx, rr, cc, r === 0 || r === 6 || c === 0 || c === 6 || inInner);
+        }
+      }
+    }
+
+    function placeAlignment(ctx, r0, c0) {
+      for (let r = -2; r <= 2; r++) {
+        for (let c = -2; c <= 2; c++) {
+          const rr = r0 + r, cc = c0 + c;
+          const dist = Math.max(Math.abs(r), Math.abs(c));
+          setModule(ctx, rr, cc, dist !== 1);
+        }
+      }
+    }
+
+    function placePatterns(ctx, version) {
+      const size = ctx.m.length;
+      placeFinder(ctx, 0, 0);
+      placeFinder(ctx, 0, size - 7);
+      placeFinder(ctx, size - 7, 0);
+      for (let i = 8; i < size - 8; i++) {
+        setModule(ctx, 6, i, i % 2 === 0);
+        setModule(ctx, i, 6, i % 2 === 0);
+      }
+      setModule(ctx, 4 * version + 9, 8, true);
+      const alignPos = { 1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26] }[version];
+      if (alignPos && alignPos.length) {
+        for (const r of alignPos) {
+          for (const c of alignPos) {
+            const nearTL = r < 9 && c < 9;
+            const nearTR = r < 9 && c > size - 10;
+            const nearBL = r > size - 10 && c < 9;
+            if (nearTL || nearTR || nearBL) continue;
+            placeAlignment(ctx, r, c);
+          }
+        }
+      }
+      for (let i = 0; i < 9; i++) {
+        if (i !== 6) {
+          ctx.reserved[8][i] = true;
+          ctx.reserved[i][8] = true;
+        }
+      }
+      for (let i = size - 8; i < size; i++) {
+        ctx.reserved[8][i] = true;
+        ctx.reserved[i][8] = true;
+      }
+      ctx.reserved[8][8] = true;
+      ctx.reserved[7][8] = true;
+      ctx.reserved[8][7] = true;
+    }
+
+    function placeData(ctx, codewords) {
+      const size = ctx.m.length;
+      const bits = [];
+      for (const cw of codewords) {
+        for (let i = 7; i >= 0; i--) bits.push((cw >>> i) & 1);
+      }
+      let bitIdx = 0, dirUp = true;
+      for (let c = size - 1; c >= 1; c -= 2) {
+        if (c === 6) c--;
+        for (let rStep = 0; rStep < size; rStep++) {
+          const r = dirUp ? size - 1 - rStep : rStep;
+          for (let k = 0; k < 2; k++) {
+            const cc = c - k;
+            if (ctx.reserved[r][cc]) continue;
+            const bit = bits[bitIdx++] || 0;
+            ctx.m[r][cc] = !!bit;
+          }
+        }
+        dirUp = !dirUp;
+      }
+    }
+
+    function applyMask0(ctx) {
+      const size = ctx.m.length;
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (ctx.reserved[r][c]) continue;
+          if (((r + c) & 1) === 0) ctx.m[r][c] = !ctx.m[r][c];
+        }
+      }
+    }
+
+    function formatBits(ecLevelBits, mask) {
+      let data = ((ecLevelBits & 0b11) << 3) | (mask & 0b111);
+      let rem = data << 10;
+      const gen = 0x537;
+      for (let i = 14; i >= 10; i--) {
+        if (((rem >>> i) & 1) !== 0) rem ^= gen << (i - 10);
+      }
+      return (((data << 10) | (rem & 0x3ff)) ^ 0x5412) & 0x7fff;
+    }
+
+    function placeFormat(ctx, mask) {
+      const size = ctx.m.length;
+      const fmt = formatBits(0b01, mask);
+      const coords1 = [[8, 0],[8, 1],[8, 2],[8, 3],[8, 4],[8, 5],[8, 7],[8, 8],[7, 8],[5, 8],[4, 8],[3, 8],[2, 8],[1, 8],[0, 8]];
+      const coords2 = [[size - 1, 8],[size - 2, 8],[size - 3, 8],[size - 4, 8],[size - 5, 8],[size - 6, 8],[size - 7, 8],[8, size - 8],[8, size - 7],[8, size - 6],[8, size - 5],[8, size - 4],[8, size - 3],[8, size - 2],[8, size - 1]];
+      for (let i = 0; i < 15; i++) {
+        const bit = ((fmt >>> (14 - i)) & 1) === 1;
+        const [r1, c1] = coords1[i];
+        const [r2, c2] = coords2[i];
+        setModule(ctx, r1, c1, bit);
+        setModule(ctx, r2, c2, bit);
+      }
+    }
+
+    function makeQrMatrix(text) {
+      const { version, codewords } = buildCodewords(text);
+      const size = 17 + 4 * version;
+      const ctx = makeMatrix(size);
+      placePatterns(ctx, version);
+      placeData(ctx, codewords);
+      applyMask0(ctx);
+      placeFormat(ctx, 0);
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (ctx.m[r][c] === null) ctx.m[r][c] = false;
+        }
+      }
+      return ctx.m;
+    }
+
+    function drawQrToCanvas(canvas, text) {
+      const matrix = makeQrMatrix(text);
+      const size = matrix.length;
+      const border = 3;
+      const dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
+      const target = Math.max(64, Math.floor(canvas.clientWidth || 130));
+
+      canvas.width = target * dpr;
+      canvas.height = target * dpr;
+
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, target, target);
+
+      const modules = size + border * 2;
+      const scale = Math.max(1, Math.floor(target / modules));
+      const drawn = modules * scale;
+      const offset = Math.floor((target - drawn) / 2);
+
+      ctx.fillStyle = "#0b1220";
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (!matrix[r][c]) continue;
+          const x = offset + (c + border) * scale;
+          const y = offset + (r + border) * scale;
+          ctx.fillRect(x, y, scale, scale);
+        }
+      }
+    }
+
+    // Generate QR codes
+    (function() {
+      const qrGrid = document.getElementById('qrGrid');
+      const contacts = [
+        { label: 'Email', data: 'mailto:izymalov@gmail.com' },
+        { label: 'GitHub', data: 'https://github.com/donat19' },
+        { label: 'LinkedIn', data: 'https://www.linkedin.com/in/ivan-zymalov-287534243/' },
+        { label: 'Portfolio', data: window.location.href.replace('/mobile.html', '/index.html') }
+      ];
+
+      contacts.forEach(function(contact) {
+        const item = document.createElement('div');
+        item.className = 'qr-item';
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'qr-canvas';
+        canvas.dataset.qrText = contact.data;
+
+        const label = document.createElement('div');
+        label.className = 'qr-label';
+        label.textContent = contact.label;
+
+        item.appendChild(canvas);
+        item.appendChild(label);
+        qrGrid.appendChild(item);
+
+        setTimeout(function() {
+          drawQrToCanvas(canvas, contact.data);
+        }, 0);
+      });
+    })();
+
+    // Redraw QRs on resize
+    window.addEventListener('resize', function() {
+      document.querySelectorAll('.qr-canvas').forEach(function(c) {
+        const t = c.dataset.qrText;
+        if (t) drawQrToCanvas(c, t);
+      });
+    });
+  </script>
+
+  <!-- Auth Client -->
+  <script src="auth-client.js"></script>
+</body>
+</html>
